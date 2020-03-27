@@ -5,7 +5,6 @@ int main()
 {
 
     printf("Hello world");
-    jkjljk;
     printf("Prueba para el github");
     return 0;
 }
