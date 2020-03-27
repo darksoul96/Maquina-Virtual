@@ -6,6 +6,8 @@ int main()
     long int reg[16], ram[2000];
 
 
+    LeerBinario(reg,ram);
+
     return 0;
 }
 
@@ -22,4 +24,5 @@ void LeerBinario(long int reg[], long int ram[])
 
     fclose(Arch);
 }
+
 
