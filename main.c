@@ -14,9 +14,12 @@ void LeerBinario(long int reg[], long int ram[])
     FILE *Arch;
 
     Arch=fopen("imagen.img","rb");
-
-    fread(reg, sizeof(long int), 16, Arch);
-    fread(ram, size(long int), 2000, Arch);
+    if (Arch!=null)
+    {
+        fread(reg, sizeof(long int), 16, Arch);
+        fread(ram, size(long int), 2000, Arch);
+    }
 
     fclose(Arch);
 }
+
