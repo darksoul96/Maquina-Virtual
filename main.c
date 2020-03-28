@@ -5,10 +5,14 @@
 int main()
 {
     long int reg[16], ram[2000];
-    printf("%08X\n",CodOp);
-    printf("%08X\n",Op1);
-    printf("%08X\n",Op2);
     //LeerBinario(reg,ram);
+    void (*funciones[143]);
+
+    double (*vector[10])(double);
+    vector[0] = sin;
+    vector[1] = cos;
+    vector[CodOp](Op1,Op2,ram,reg);
+
     return 0;
 }
 
@@ -28,7 +32,6 @@ void LeerBinario(long int reg[], long int ram[])
 
 
 void Ejecucion(long int reg[], long int ram[]){
-    long instruccion;
     while(reg[4]>=0 && reg[4]<DS){
         interprete(reg,ram);
         (reg[4])++;
@@ -36,11 +39,20 @@ void Ejecucion(long int reg[], long int ram[]){
 }
 
 void Interprete(long int reg[], long int ram[]){
-        long int CodOp,Op1,Op2;
+        long int CodOp,TOp1,TOp2,Op1,Op2;
+        long instruccion;
         instruccion = ram[reg[4]];
         CodOp = instruccion & 0xFFFF0000;
-        Op1 = instruccion & 0x0000FF00;
-        Op2 = instruccion & 0x000000FF;
+        TOp1 = instruccion & 0x0000FF00;
+        TOp2 = instruccion & 0x000000FF;
+        (reg[4])++;
+        instruccion = ram[reg[4]];
+        switch()
+
+
+
 
 }
+
+
 
