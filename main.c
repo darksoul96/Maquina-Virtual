@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "util.h"
+#include "instrucciones.c"
 
 void LeerBinario(long int [], long int []);
 void Ejecucion(long int [], long int []);
@@ -14,7 +15,7 @@ int main()
 
     LeerBinario(reg,ram);
 
-/*
+
     funciones[0x01]=mov;
     funciones[0x02]=add;
     funciones[0x03]=sub;
@@ -42,7 +43,6 @@ int main()
     funciones[0x29]=jnn;
     funciones[0x81]=sys;
     funciones[0x8F]=stop;
-*/
 
     Ejecucion(reg,ram);
     //cargarFunciones(funciones);
@@ -95,14 +95,18 @@ void cargaOp(long int TOp, long int *Op, long celda, long int reg[], long int ra
     }
     else
         if (TOp == 0x01)
-            Op=reg[celda];
+        {
+            Op=reg;
+            Op+=celda;
+        }
             else
             {
                 aux=celda & 0xF0000000;
                 if (aux == 0x20000000)
                 {
                     aux=celda & 0x0FFFFFFF;
-                    Op=ram[reg[2]+aux];
+                    Op=ram;
+                    Op+=reg[2]+aux;
                 }
             }
 }
