@@ -32,41 +32,27 @@ void LeerBinario(long int reg[], long int ram[])
 
 
 void Ejecucion(long int reg[], long int ram[]){
+    long celda1,celda2,celda3;
     while(reg[4]>=0 && reg[4]<DS){
-        interprete(reg,ram);
+        celda1 = ram[reg[4];
+        celda2 = ++ram[reg[4];
+        celda3 = ++ram[reg[4];
+        interprete(celda1, celda2, celda3, reg,ram);
         (reg[4])++;
     }
 }
 
-void Interprete(long int reg[], long int ram[]){
+void Interprete(long celda1, long celda2, long celda3, long int reg[], long int ram[]){
         long int CodOp,TOp1,TOp2,Op1,Op2;
-        long instruccion;
-        instruccion = ram[reg[4]];
-        CodOp = instruccion & 0xFFFF0000;
-        TOp1 = instruccion & 0x0000FF00;
-        TOp2 = instruccion & 0x000000FF;
-        (reg[4])++;
-        instruccion = ram[reg[4]];
-
-        for (int i=0;i<=1;i++)
-        {
-            switch(operando[i])
-            {
-                case 00000000:
-                    Op1=instruccion;
-                break;
-                case 00000001:
-
-                break;
-                case 00000002:
-
-                break;
-        }
-        }
+        CodOp = celda1 & 0xFFFF0000;
+        TOp1 = celda1 & 0x0000FF00;
+        TOp2 = celda1 & 0x000000FF;
+}
 
 
+void cargaOp(long int TOp, long int *Op){
 
-
+}
 
 }
 
