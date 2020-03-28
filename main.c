@@ -14,6 +14,7 @@ int main()
 
     LeerBinario(reg,ram);
 
+/*
     funciones[0x01]=mov;
     funciones[0x02]=add;
     funciones[0x03]=sub;
@@ -41,9 +42,10 @@ int main()
     funciones[0x29]=jnn;
     funciones[0x81]=sys;
     funciones[0x8F]=stop;
+*/
 
-
-    cargarFunciones(funciones);
+    Ejecucion(reg,ram);
+    //cargarFunciones(funciones);
 
     return 0;
 }
@@ -69,30 +71,38 @@ void Ejecucion(long int reg[], long int ram[]){
         celda1 = ram[reg[4]];
         celda2 = ++ram[reg[4]];
         celda3 = ++ram[reg[4]];
-        interprete(celda1, celda2, celda3, reg,ram);
+        Interprete(celda1, celda2, celda3, reg, ram);
         (reg[4])++;
     }
 }
 
 void Interprete(long celda1, long celda2, long celda3, long int reg[], long int ram[]){
-        long int CodOp,TOp1,TOp2,Op1,Op2;
+        long int CodOp, TOp1, TOp2, *Op1, *Op2;
         CodOp = celda1 & 0xFFFF0000;
         TOp1 = celda1 & 0x0000FF00;
         TOp2 = celda1 & 0x000000FF;
+        cargaOp(TOp1, &Op1, celda1, reg, ram);
 }
 
 
-//void cargaOp(long int TOp, long int *Op)
-//{
-
-//}
-
-void cargarFunciones(void *funciones[])
+void cargaOp(long int TOp, long int *Op, long celda, long int reg[], long int ram[])
 {
-    *funciones[0]=
-
-
+    long aux;
+    if (TOp == 0x00)
+    {
+        *Op=(long int)malloc(sizeof(long int));
+        *Op=celda;
+    }
+    else
+        if (TOp == 0x01)
+            Op=reg[celda];
+            else
+            {
+                aux=celda & 0xF0000000;
+                if (aux == 0x20000000)
+                {
+                    aux=celda & 0x0FFFFFFF;
+                    Op=ram[reg[2]+aux];
+                }
+            }
 }
-
-
-
