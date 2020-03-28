@@ -53,7 +53,7 @@ void mul(long int *op1, long int *op2, long int *cc)
                 (*cc)+=0x80000000;
 }
 
-void div(long int *op1, long int *op2, long int *cc)
+void divi(long int *op1, long int *op2, long int *cc)
 {
     *op1=(*op1) / (*op2);
     *cc=0x00000000;
@@ -105,40 +105,40 @@ void rnd(long int *op1, long int *op2, long int *cc)
 void and(long int *op1, long int *op2, long int *cc)
 {
     *op1=(*op1) & (*op2);
-    if ((*op1) - (*op2) == 0)
+    if ((*op1)== 0)
         (*cc)+=1;
         else
-            if ((*op1) - (*op2) < 0)
+            if ((*op1)< 0)
                 (*cc)+=0x80000000;
 }
 
 void or(long int *op1, long int *op2, long int *cc)
 {
     *op1=(*op1) | (*op2);
-    if ((*op1) - (*op2) == 0)
+    if ((*op1) == 0)
         (*cc)+=1;
         else
-            if ((*op1) - (*op2) < 0)
+            if ((*op1)< 0)
                 (*cc)+=0x80000000;
 }
 
 void not(long int *op1, long int *op2, long int *cc)
 {
-    *op1=(*op1) ~ (*op2);
-    if ((*op1) - (*op2) == 0)
+    *op1=~(*op1);
+    if ((*op1) == 0)
         (*cc)+=1;
         else
-            if ((*op1) - (*op2) < 0)
+            if ((*op1) < 0)
                 (*cc)+=0x80000000;
 }
 
 void xor(long int *op1, long int *op2, long int *cc)
 {
     *op1=(*op1) ^ (*op2);
-    if ((*op1) - (*op2) == 0)
+    if ((*op1) == 0)
         (*cc)+=1;
         else
-            if ((*op1) - (*op2) < 0)
+            if ((*op1) < 0)
                 (*cc)+=0x80000000;
 }
 
