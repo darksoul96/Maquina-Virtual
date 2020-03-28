@@ -9,6 +9,7 @@ int main()
 
     LeerBinario(reg,ram);
 
+    scanf("%d");
     return 0;
 }
 
