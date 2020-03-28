@@ -6,7 +6,7 @@
 void LeerBinario(long int [], long int []);
 void Ejecucion(long int [], long int []);
 void Interprete(long , long , long , long int [], long int []);
-void (*funciones[0x8F])(long op1, long op2);
+void (*funciones[0x8F])(long *op1, long *op2, long int *cc);
 
 void cargarFunciones(void *[]);
 int main()
