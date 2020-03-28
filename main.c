@@ -27,4 +27,10 @@ void LeerBinario(long int reg[], long int ram[])
     fclose(Arch);
 }
 
+void Ejecucion(long int reg[], long int ram[]){
+
+    while(reg[4]>=0 && reg[4]<DS){
+
+    }
+}
 
