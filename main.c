@@ -5,11 +5,13 @@
 int main()
 {
     long int reg[16], ram[2000];
+    long int Mascara16 = 0xFF00;
+    long int prueba = 0x0F0F;
+    long int prueba2 = 00040102;
 
-
-    LeerBinario(reg,ram);
-
-    scanf("%d");
+    long int resultado = Mascara16 & prueba;
+    printf("%04X",resultado);
+    //LeerBinario(reg,ram);
     return 0;
 }
 
@@ -27,9 +29,12 @@ void LeerBinario(long int reg[], long int ram[])
     fclose(Arch);
 }
 
-void Ejecucion(long int reg[], long int ram[]){
 
+
+void Ejecucion(long int reg[], long int ram[]){
+    int CodOp,Op1,Op2;
     while(reg[4]>=0 && reg[4]<DS){
+    CodOp = ram[reg[4]];
 
     }
 }
