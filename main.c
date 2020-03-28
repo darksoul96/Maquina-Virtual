@@ -47,7 +47,23 @@ void Interprete(long int reg[], long int ram[]){
         TOp2 = instruccion & 0x000000FF;
         (reg[4])++;
         instruccion = ram[reg[4]];
-        switch()
+
+        for (int i=0;i<=1;i++)
+        {
+            switch(operando[i])
+            {
+                case 00000000:
+                    Op1=instruccion;
+                break;
+                case 00000001:
+
+                break;
+                case 00000002:
+
+                break;
+        }
+        }
+
 
 
 
