@@ -2,16 +2,48 @@
 #include <stdlib.h>
 #include "util.h"
 
+void LeerBinario(long int [], long int []);
+void Ejecucion(long int [], long int []);
+void Interprete(long , long , long , long int [], long int []);
+void (*funciones[0x8F])(long op1, long op2);
+
+void cargarFunciones(void *[]);
 int main()
 {
     long int reg[16], ram[2000];
-    //LeerBinario(reg,ram);
-    void (*funciones[143]);
 
-    double (*vector[10])(double);
-    vector[0] = sin;
-    vector[1] = cos;
-    vector[CodOp](Op1,Op2,ram,reg);
+    LeerBinario(reg,ram);
+
+    funciones[0x01]=mov;
+    funciones[0x02]=add;
+    funciones[0x03]=sub;
+    funciones[0x04]=mul;
+    funciones[0x05]=div;
+    funciones[0x06]=mod;
+    funciones[0x13]=cmp;
+    funciones[0x17]=swap;
+    funciones[0x19]=rnd;
+    funciones[0x31]=and;
+    funciones[0x32]=or;
+    funciones[0x33]=not;
+    funciones[0x34]=xor;
+    funciones[0x37]=shl;
+    funciones[0x38]=shr;
+    funciones[0x20]=jmp;
+    funciones[0x21]=je;
+    funciones[0x22]=jg;
+    funciones[0x23]=jl;
+    funciones[0x24]=jz;
+    funciones[0x25]=jp;
+    funciones[0x26]=jn;
+    funciones[0x27]=jnz;
+    funciones[0x28]=jnp;
+    funciones[0x29]=jnn;
+    funciones[0x81]=sys;
+    funciones[0x8F]=stop;
+
+
+    cargarFunciones(funciones);
 
     return 0;
 }
@@ -34,9 +66,9 @@ void LeerBinario(long int reg[], long int ram[])
 void Ejecucion(long int reg[], long int ram[]){
     long celda1,celda2,celda3;
     while(reg[4]>=0 && reg[4]<DS){
-        celda1 = ram[reg[4];
-        celda2 = ++ram[reg[4];
-        celda3 = ++ram[reg[4];
+        celda1 = ram[reg[4]];
+        celda2 = ++ram[reg[4]];
+        celda3 = ++ram[reg[4]];
         interprete(celda1, celda2, celda3, reg,ram);
         (reg[4])++;
     }
@@ -50,9 +82,15 @@ void Interprete(long celda1, long celda2, long celda3, long int reg[], long int 
 }
 
 
-void cargaOp(long int TOp, long int *Op){
+//void cargaOp(long int TOp, long int *Op)
+//{
 
-}
+//}
+
+void cargarFunciones(void *funciones[])
+{
+    *funciones[0]=
+
 
 }
 
