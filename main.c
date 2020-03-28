@@ -20,7 +20,7 @@ int main()
     funciones[0x02]=add;
     funciones[0x03]=sub;
     funciones[0x04]=mul;
-    funciones[0x05]=div;
+    funciones[0x05]=divi;
     funciones[0x06]=mod;
     funciones[0x13]=cmp;
     funciones[0x17]=swap;
