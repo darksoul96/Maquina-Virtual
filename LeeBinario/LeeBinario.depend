@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1585782778 source:d:\downloads\google drive\ingenieria\arquitectura de computadoras\maquina virtual\leebinario\main.c
+	<stdio.h>
+	<stdlib.h>
+
