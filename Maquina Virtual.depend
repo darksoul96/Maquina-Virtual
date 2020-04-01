@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1585778488 source:d:\downloads\google drive\ingenieria\arquitectura de computadoras\maquina virtual\maquina virtual\main.c
+	<stdio.h>
+	<stdlib.h>
+	"util.h"
+	"instrucciones.c"
+
+1585362214 d:\downloads\google drive\ingenieria\arquitectura de computadoras\maquina virtual\maquina virtual\util.h
+
+1585763055 d:\downloads\google drive\ingenieria\arquitectura de computadoras\maquina virtual\maquina virtual\instrucciones.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+

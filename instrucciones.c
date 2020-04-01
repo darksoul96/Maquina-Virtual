@@ -2,13 +2,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-
-int main()
-{
-
-    return 0;
-}
-
 void mov(long int *op1, long int *op2, long int *cc)
 {
     *op1=*op2;
