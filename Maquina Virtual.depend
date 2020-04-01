@@ -12,3 +12,16 @@
 	<stdlib.h>
 	<time.h>
 
+1585781168 source:c:\users\usr\documents\github\maquina-virtual\main.c
+	<stdio.h>
+	<stdlib.h>
+	"util.h"
+	"instrucciones.c"
+
+1585362170 c:\users\usr\documents\github\maquina-virtual\util.h
+
+1585782329 c:\users\usr\documents\github\maquina-virtual\instrucciones.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+
