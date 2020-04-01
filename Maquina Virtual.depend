@@ -12,25 +12,32 @@
 	<stdlib.h>
 	<time.h>
 
-<<<<<<< HEAD
+1585782347 D
+
 1585781168 source:c:\users\usr\documents\github\maquina-virtual\main.c
-=======
-1585782347 source:c:\users\seba\documents\github\maquina-virtual\main.c
->>>>>>> 2b828a65999d9990107388dc48b0692771432597
+
+1585783054 source:c:\users\seba\documents\github\maquina-virtual\main.c
 	<stdio.h>
 	<stdlib.h>
 	"util.h"
 	"instrucciones.c"
 
-<<<<<<< HEAD
+1585763055 28a65999d9990107388dc48b0692771432597
+	<stdio.h>
+	<stdlib.h>
+	"util.h"
+	"instrucciones.c"
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+
 1585362170 c:\users\usr\documents\github\maquina-virtual\util.h
 
 1585782329 c:\users\usr\documents\github\maquina-virtual\instrucciones.c
-=======
+
 1585362214 c:\users\seba\documents\github\maquina-virtual\util.h
 
-1585763055 c:\users\seba\documents\github\maquina-virtual\instrucciones.c
->>>>>>> 2b828a65999d9990107388dc48b0692771432597
+1585782821 c:\users\seba\documents\github\maquina-virtual\instrucciones.c
 	<stdio.h>
 	<stdlib.h>
 	<time.h>

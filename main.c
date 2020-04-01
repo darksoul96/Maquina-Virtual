@@ -75,9 +75,6 @@ void Ejecucion(long int reg[], long int ram[]){
         celda2 = ram[IP];
         IP++;
         celda3 = ram[IP];
-        printf("%08X\n",celda1);
-        printf("%08X\n",celda2);
-        printf("%08X\n",celda3);
         Interprete(celda1, celda2, celda3, reg, ram);
         IP++;
         reg[4] = IP;
