@@ -63,10 +63,6 @@ void LeerBinario(long int reg[], long int ram[])
         fread(ram, sizeof(long int), 2000, Arch);
     }
     fclose(Arch);
-    //CARGO MANUALMENTE LAS PRIMERAS 3 RAM PARA PODER PROBAR, A LOS CHICOS NO LES ANDA EL TRADUCTOR
-    ram[0]=0x00040102;
-    ram[1]=0x0A;
-    ram[2]=0x20000020;
 }
 
 
