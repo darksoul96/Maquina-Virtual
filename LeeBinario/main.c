@@ -22,5 +22,4 @@ int main(){
     //ram[2]=0x20000020;
     for (i=0;i<19; i+=3)
             printf("\n[%08X]\t\t\t%08X %08X %08X",i,ram[i],ram[i+1],ram[i+2]);
-    fclose(Arch);
 }
