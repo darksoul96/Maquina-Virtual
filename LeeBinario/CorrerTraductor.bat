@@ -1,0 +1,1 @@
+cmd /K Traductor.exe programa.asm imagenMemoria.img

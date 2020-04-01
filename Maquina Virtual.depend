@@ -20,7 +20,11 @@
 	"util.h"
 	"instrucciones.c"
 
-1585782347 source:c:\users\seba\documents\github\maquina-virtual\main.c
+1585783091 source:c:\users\seba\documents\github\maquina-virtual\main.c
+	<stdio.h>
+	<stdlib.h>
+	"util.h"
+	"instrucciones.c"
 
 1585763055 28a65999d9990107388dc48b0692771432597
 	<stdio.h>
