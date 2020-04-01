@@ -1,2 +1,1 @@
-MOV AX,[31]
-MUL EX,31
+MUL AX,[32]

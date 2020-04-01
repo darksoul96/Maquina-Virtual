@@ -55,7 +55,6 @@ void LeerBinario(long int reg[], long int ram[])
 {
     FILE *Arch;
     int i;
-
     Arch=fopen("imagenMemoria.img","rb");
     if (Arch!=NULL)
     {
