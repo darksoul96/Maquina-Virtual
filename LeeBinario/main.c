@@ -8,8 +8,10 @@ int main(){
     Arch=fopen("imagenMemoria.img","rb");
     if (Arch!=NULL)
     {
-        fread(reg, sizeof(long), 16, Arch);
-        fread(ram, sizeof(long), 2000, Arch);
+        for (i=0; i<16; i++)
+            fread(&(reg[i]),sizeof(long),1,Arch);
+        while (fread(&(ram[i]),sizeof(long),1,Arch))
+            i++;
     }
     fclose(Arch);
     for(i=0;i<16;i++){
@@ -22,4 +24,3 @@ int main(){
             printf("\n[%08X]\t\t\t%08X %08X %08X",i,ram[i],ram[i+1],ram[i+2]);
     fclose(Arch);
 }
-
