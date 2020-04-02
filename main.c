@@ -76,9 +76,6 @@ void Ejecucion(long int reg[], long int ram[]){ // YA ESTA PROBADO QUE LEE BIEN,
         celda3 = ram[IP];
         Interprete(celda1, celda2, celda3, reg, ram);
         IP++;
-        //printf("%08X\t",celda1); // LUEGO HAY QUE BORRARLOS
-        //printf("%08X\t",celda2);
-        //printf("%08X\n",celda3);
         reg[4] = IP;
     }
 }
@@ -126,3 +123,5 @@ void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int r
                 }
             }
 }
+
+void ejecutaOp(long int * Op1, long int * Op2){}
