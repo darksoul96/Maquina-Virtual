@@ -76,9 +76,9 @@ void Ejecucion(long int reg[], long int ram[]){ // YA ESTA PROBADO QUE LEE BIEN,
         celda3 = ram[IP];
         Interprete(celda1, celda2, celda3, reg, ram);
         IP++;
-        printf("%08X\t",celda1); // LUEGO HAY QUE BORRARLOS
-        printf("%08X\t",celda2);
-        printf("%08X\n",celda3);
+        //printf("%08X\t",celda1); // LUEGO HAY QUE BORRARLOS
+        //printf("%08X\t",celda2);
+        //printf("%08X\n",celda3);
         reg[4] = IP;
     }
 }
@@ -96,7 +96,7 @@ void Interprete(long celda1, long celda2, long celda3, long int reg[], long int 
         if(&reg[10]==Op1)                   // IGUALE EL REG[10](AX) CON EL OP1 PARA VER SI LO CARGO BIEN
             printf("Son iguales");
         cargaOp(TOp2, &Op2, celda3, reg, ram);
-        if(&ram[32+reg[2]]==Op2)
+        if(&ram[32+reg[2]]==*Op2)
             printf("Son iguales op2");
 }
 
@@ -107,7 +107,7 @@ void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int r
     if (TOp == 0x00)
     {
         *Op=(long int)malloc(sizeof(long int));
-        *Op=celda;
+        **Op=celda;
     }
     else
         if (TOp == 0x01)

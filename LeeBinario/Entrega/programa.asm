@@ -1,1 +1,1 @@
-MOV AX,[32]
+MOV AX,5
