@@ -93,9 +93,11 @@ void Interprete(long celda1, long celda2, long celda3, long int reg[], long int 
         printf("%02X\t",TOp1);
         printf("%02X\t",TOp2);
         cargaOp(TOp1, &Op1, celda2, reg, ram);
-        if(reg[10]==*Op1)                   // IGUALE EL REG[10](AX) CON EL OP1 PARA VER SI LO CARGO BIEN
+        if(&reg[10]==Op1)                   // IGUALE EL REG[10](AX) CON EL OP1 PARA VER SI LO CARGO BIEN
             printf("Son iguales");
         cargaOp(TOp2, &Op2, celda3, reg, ram);
+        if(&ram[32+reg[2]]==Op2)
+            printf("Son iguales op2");
 }
 
 
@@ -115,12 +117,12 @@ void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int r
         }
             else
             {
-                aux=celda & 0xF0000000;
-                if (aux == 0x20000000)
+                aux=(celda & 0xF0000000)>>28;
+                if (aux == 0x2)
                 {
                     aux=celda & 0x0FFFFFFF;
-                    Op=ram;
-                    Op+=reg[2]+aux;
+                    *Op=ram;
+                    *Op+=reg[2]+aux;
                 }
             }
 }
