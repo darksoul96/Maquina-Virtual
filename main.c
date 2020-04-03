@@ -6,7 +6,7 @@
 void LeerBinario(long int [], long int []);
 void Ejecucion(long int [], long int []);
 void Interprete(long , long , long , long int [], long int []);
-void (*funciones[0x8F])(long int *op1, long int *op2, long int *cc);
+void (*funciones[0x8F])(long int *op1, long int *op2, long int *cc, long int *ip);
 void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int ram[]);
 
 void cargarFunciones(void *[]);
@@ -66,17 +66,17 @@ void LeerBinario(long int reg[], long int ram[])
 
 void Ejecucion(long int reg[], long int ram[]){ // YA ESTA PROBADO QUE LEE BIEN, DEJE LOS PRINT PARA VER NOMAS
     long celda1,celda2,celda3;
-    long int IP;
-    IP = reg[4];
-    while(IP>=0 && IP<reg[2]){
-        celda1 = ram[IP];
-        IP++;
-        celda2 = ram[IP];
-        IP++;
-        celda3 = ram[IP];
+    int cCelda=0;
+
+    while(cCelda>=0 && cCelda<reg[2]){
+        celda1 = ram[cCelda];
+        cCelda++;
+        celda2 = ram[cCelda];
+        cCelda++;
+        celda3 = ram[cCelda];
         Interprete(celda1, celda2, celda3, reg, ram);
-        IP++;
-        reg[4] = IP;
+        cCelda++;
+        reg[4]++;
     }
 }
 

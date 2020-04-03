@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-void mov(long int *op1, long int *op2, long int *cc)
+void mov(long int *op1, long int *op2, long int *cc, long int *ip)
 {
     *op1=*op2;
     *cc=0x00000000;
@@ -13,7 +13,7 @@ void mov(long int *op1, long int *op2, long int *cc)
                 (*cc)+=0x80000000;
 }
 
-void add(long int *op1, long int *op2, long int *cc)
+void add(long int *op1, long int *op2, long int *cc, long int *ip)
 {
     *op1=(*op1) + (*op2);
     *cc=0x00000000;
@@ -24,7 +24,7 @@ void add(long int *op1, long int *op2, long int *cc)
                 (*cc)+=0x80000000;
 }
 
-void sub(long int *op1, long int *op2, long int *cc)
+void sub(long int *op1, long int *op2, long int *cc, long int *ip)
 {
     *op1=(*op1) - (*op2);
     *cc=0x00000000;
@@ -35,7 +35,7 @@ void sub(long int *op1, long int *op2, long int *cc)
                 (*cc)+=0x80000000;
 }
 
-void mul(long int *op1, long int *op2, long int *cc)
+void mul(long int *op1, long int *op2, long int *cc, long int *ip)
 {
     *op1=(*op1) * (*op2);
     *cc=0x00000000;
@@ -46,7 +46,7 @@ void mul(long int *op1, long int *op2, long int *cc)
                 (*cc)+=0x80000000;
 }
 
-void divi(long int *op1, long int *op2, long int *cc)
+void divi(long int *op1, long int *op2, long int *cc, long int *ip)
 {
     *op1=(*op1) / (*op2);
     *cc=0x00000000;
@@ -57,7 +57,7 @@ void divi(long int *op1, long int *op2, long int *cc)
                 (*cc)+=0x80000000;
 }
 
-void mod(long int *op1, long int *op2, long int *cc)
+void mod(long int *op1, long int *op2, long int *cc, long int *ip)
 {
     *op1=(*op1)%(*op2);
     *cc=0x00000000;
@@ -68,7 +68,7 @@ void mod(long int *op1, long int *op2, long int *cc)
                 (*cc)+=0x80000000;
 }
 
-void cmp(long int *op1, long int *op2, long int *cc)
+void cmp(long int *op1, long int *op2, long int *cc, long int *ip)
 {
      *cc=0x00000000;
     if ((*op1) - (*op2) == 0)
@@ -78,7 +78,7 @@ void cmp(long int *op1, long int *op2, long int *cc)
                 (*cc)+=0x80000000;
 }
 
-void swap(long int *op1, long int *op2, long int *cc)
+void swap(long int *op1, long int *op2, long int *cc, long int *ip)
 {
     long int aux;
 
@@ -87,7 +87,7 @@ void swap(long int *op1, long int *op2, long int *cc)
     *op2=aux;
 }
 
-void rnd(long int *op1, long int *op2, long int *cc)
+void rnd(long int *op1, long int *op2, long int *cc, long int *ip)
 {
      time_t t;
 
@@ -95,9 +95,10 @@ void rnd(long int *op1, long int *op2, long int *cc)
      *op1=rand()%(*op2);
 }
 
-void and(long int *op1, long int *op2, long int *cc)
+void and(long int *op1, long int *op2, long int *cc, long int *ip)
 {
     *op1=(*op1) & (*op2);
+    *cc=0x00000000;
     if ((*op1)== 0)
         (*cc)+=1;
         else
@@ -105,9 +106,10 @@ void and(long int *op1, long int *op2, long int *cc)
                 (*cc)+=0x80000000;
 }
 
-void or(long int *op1, long int *op2, long int *cc)
+void or(long int *op1, long int *op2, long int *cc, long int *ip)
 {
     *op1=(*op1) | (*op2);
+    *cc=0x00000000;
     if ((*op1) == 0)
         (*cc)+=1;
         else
@@ -115,9 +117,10 @@ void or(long int *op1, long int *op2, long int *cc)
                 (*cc)+=0x80000000;
 }
 
-void not(long int *op1, long int *op2, long int *cc)
+void not(long int *op1, long int *op2, long int *cc, long int *ip)
 {
     *op1=~(*op1);
+    *cc=0x00000000;
     if ((*op1) == 0)
         (*cc)+=1;
         else
@@ -125,9 +128,10 @@ void not(long int *op1, long int *op2, long int *cc)
                 (*cc)+=0x80000000;
 }
 
-void xor(long int *op1, long int *op2, long int *cc)
+void xor(long int *op1, long int *op2, long int *cc, long int *ip)
 {
     *op1=(*op1) ^ (*op2);
+    *cc=0x00000000;
     if ((*op1) == 0)
         (*cc)+=1;
         else
@@ -135,14 +139,21 @@ void xor(long int *op1, long int *op2, long int *cc)
                 (*cc)+=0x80000000;
 }
 
-void shl(long int *op1, long int *op2, long int  *cc)
+void shl(long int *op1, long int *op2, long int  *cc, long int *ip)
 {
     *op1=(*op1) << (*op2);
 }
 
-void shr(long int *op1, long int *op2, long int  *cc)
+void shr(long int *op1, long int *op2, long int  *cc, long int *ip)
 {
     *op1=(*op1) >> (*op2);
 }
+
+
+void jmp(long int *op1, long int *op2, long int *cc, long int *ip)
+{
+    *ip=*op1;
+}
+
 
 
