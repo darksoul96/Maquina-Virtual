@@ -230,10 +230,6 @@ void jnp(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[
 
 void sys(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
 {
-    if (*op1==1)
-    {
-        if ()
-    }
 }
 
 void stop(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
