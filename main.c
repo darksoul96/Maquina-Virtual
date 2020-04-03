@@ -7,7 +7,7 @@ void LeerBinario(long int [], long int []);
 void Ejecucion(long int [], long int []);
 void Interprete(long , long , long , long int [], long int []);
 void (*funciones[0x8F])(long int *op1, long int *op2, long int *cc);
-void cargaOp(long int TOp, long int *Op, long celda, long int reg[], long int ram[]);
+void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int ram[]);
 
 void cargarFunciones(void *[]);
 int main()
@@ -54,8 +54,7 @@ int main()
 void LeerBinario(long int reg[], long int ram[])
 {
     FILE *Arch;
-    int i;
-    Arch=fopen("imagenMemoria.img","rb");
+    Arch=fopen("imagenMemoria.img","r");
     if (Arch!=NULL)
     {
         fread(reg, sizeof(long int), 16, Arch);
@@ -65,11 +64,11 @@ void LeerBinario(long int reg[], long int ram[])
 }
 
 
-void Ejecucion(long int reg[], long int ram[]){
+void Ejecucion(long int reg[], long int ram[]){ // YA ESTA PROBADO QUE LEE BIEN, DEJE LOS PRINT PARA VER NOMAS
     long celda1,celda2,celda3;
     long int IP;
     IP = reg[4];
-    while(IP>=0 && IP<DS){
+    while(IP>=0 && IP<reg[2]){
         celda1 = ram[IP];
         IP++;
         celda2 = ram[IP];
@@ -83,35 +82,46 @@ void Ejecucion(long int reg[], long int ram[]){
 
 void Interprete(long celda1, long celda2, long celda3, long int reg[], long int ram[]){
         long int CodOp, TOp1, TOp2, *Op1, *Op2;
-        CodOp = celda1 & 0xFFFF0000;
-        TOp1 = celda1 & 0x0000FF00;
+        printf("%08X\t",celda1);
+        CodOp = (celda1 & 0xFFFF0000)>>16;    // REALIZO UN CORRIMIENTO DE 16 BITS A LA DERECHA, PARA QUEDARME SOLO CON EL 0004
+        TOp1 = (celda1 & 0x0000FF00)>>8;
         TOp2 = celda1 & 0x000000FF;
-        cargaOp(TOp1, Op1, celda1, reg, ram);
+        printf("%04X\t",CodOp);             // LOS MUESTRO SOLO PARA VER QUE ESTE BIEN CARGADO
+        printf("%02X\t",TOp1);
+        printf("%02X\t",TOp2);
+        cargaOp(TOp1, &Op1, celda2, reg, ram);
+        if(&reg[10]==Op1)                   // IGUALE EL REG[10](AX) CON EL OP1 PARA VER SI LO CARGO BIEN
+            printf("Son iguales");
+        cargaOp(TOp2, &Op2, celda3, reg, ram);
+        if(&ram[32+reg[2]]==*Op2)
+            printf("Son iguales op2");
 }
 
 
-void cargaOp(long int TOp, long int *Op, long celda, long int reg[], long int ram[])
+void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int ram[])
 {
     long aux;
     if (TOp == 0x00)
     {
         *Op=(long int)malloc(sizeof(long int));
-        *Op=celda;
+        **Op=celda;
     }
     else
         if (TOp == 0x01)
         {
-            Op=reg;
-            Op+=celda;
+            *Op=reg;
+            *Op+=celda;
         }
             else
             {
-                aux=celda & 0xF0000000;
-                if (aux == 0x20000000)
+                aux=(celda & 0xF0000000)>>28;
+                if (aux == 0x2)
                 {
                     aux=celda & 0x0FFFFFFF;
-                    Op=ram;
-                    Op+=reg[2]+aux;
+                    *Op=ram;
+                    *Op+=reg[2]+aux;
                 }
             }
 }
+
+void ejecutaOp(long int * Op1, long int * Op2){}
