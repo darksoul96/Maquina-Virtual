@@ -1,3 +1,3 @@
 MOV AX,5
+STOP
 MOV [500],5
-JE [500],1

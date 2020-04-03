@@ -76,9 +76,9 @@ void Ejecucion(long int reg[], long int ram[]){ // YA ESTA PROBADO QUE LEE BIEN,
         celda2 = ram[cCelda];
         cCelda++;
         celda3 = ram[cCelda];
+        reg[4]++;
         Interprete(celda1, celda2, celda3, reg, ram);
         cCelda++;
-        reg[4]++;
         if(reg[4]!=1)
             cCelda=(reg[4]-1)*3;
     }
