@@ -121,7 +121,15 @@ void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int r
                     *Op=ram;
                     *Op+=reg[2]+aux;
                 }
+                else{
+                    if(aux == 0x3){
+                        aux=celda & 0x0FFFFFFF;
+                        *Op=ram;
+                        *Op+=reg[3]+aux;
+                    }
+
+                }
             }
 }
 
-void ejecutaOp(long int * Op1, long int * Op2){}
+void ejecutaOp(long int * Op1, long int * Op2, long int CodP){}
