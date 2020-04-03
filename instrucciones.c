@@ -2,83 +2,83 @@
 #include <stdlib.h>
 #include <time.h>
 
-void mov(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void mov(long int *op1, long int *op2, long int reg[], long int ram[])
 {
     *op1=*op2;
-    *cc=0x00000000;
+    reg[9]=0x00000000;
     if (*op1 == 0)
-        (*cc)+=1;
+        (reg[9])+=1;
         else
             if (*op1 < 0)
-                (*cc)+=0x80000000;
+                (reg[9])+=0x80000000;
 }
 
-void add(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void add(long int *op1, long int *op2, long int reg[], long int ram[])
 {
     *op1=(*op1) + (*op2);
-    *cc=0x00000000;
+    reg[9]=0x00000000;
     if (*op1 == 0)
-        (*cc)+=1;
+        (reg[9])+=1;
         else
             if (*op1 < 0)
-                (*cc)+=0x80000000;
+                (reg[9])+=0x80000000;
 }
 
-void sub(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void sub(long int *op1, long int *op2, long int reg[], long int ram[])
 {
     *op1=(*op1) - (*op2);
-    *cc=0x00000000;
+    reg[9]=0x00000000;
     if (*op1 == 0)
-        (*cc)+=1;
+        (reg[9])+=1;
         else
             if (*op1 < 0)
-                (*cc)+=0x80000000;
+                (reg[9])+=0x80000000;
 }
 
-void mul(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void mul(long int *op1, long int *op2, long int reg[], long int ram[])
 {
     *op1=(*op1) * (*op2);
-    *cc=0x00000000;
+    reg[9]=0x00000000;
     if (*op1 == 0)
-        (*cc)+=1;
+        (reg[9])+=1;
         else
             if (*op1 < 0)
-                (*cc)+=0x80000000;
+                (reg[9])+=0x80000000;
 }
 
-void divi(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void divi(long int *op1, long int *op2, long int reg[], long int ram[])
 {
     *op1=(*op1) / (*op2);
-    *cc=0x00000000;
+    reg[9]=0x00000000;
     if (*op1 == 0)
-        (*cc)+=1;
+        (reg[9])+=1;
         else
             if (*op1 < 0)
-                (*cc)+=0x80000000;
+                (reg[9])+=0x80000000;
 }
 
-void mod(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void mod(long int *op1, long int *op2, long int reg[], long int ram[])
 {
     *op1=(*op1)%(*op2);
-    *cc=0x00000000;
+    reg[9]=0x00000000;
     if (*op1 == 0)
-        (*cc)+=1;
+        (reg[9])+=1;
         else
             if (*op1 < 0)
-                (*cc)+=0x80000000;
+                (reg[9])+=0x80000000;
 }
 
-void cmp(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void cmp(long int *op1, long int *op2, long int reg[], long int ram[])
 {
-     *cc=0x00000000;
+     reg[9]=0x00000000;
     if ((*op1) - (*op2) == 0)
-        (*cc)+=1;
+        (reg[9])+=1;
         else
             if ((*op1) - (*op2) < 0)
-                (*cc)+=0x80000000;
+                (reg[9])+=0x80000000;
 }
 
-void swap(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void swap(long int *op1, long int *op2, long int reg[], long int ram[])
 {
     long int aux;
 
@@ -87,7 +87,7 @@ void swap(long int *op1, long int *op2, long int *cc, long int *ip, long int reg
     *op2=aux;
 }
 
-void rnd(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void rnd(long int *op1, long int *op2, long int reg[], long int ram[])
 {
      time_t t;
 
@@ -95,144 +95,179 @@ void rnd(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[
      *op1=rand()%(*op2);
 }
 
-void and(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void and(long int *op1, long int *op2, long int reg[], long int ram[])
 {
     *op1=(*op1) & (*op2);
-    *cc=0x00000000;
+    reg[9]=0x00000000;
     if ((*op1)== 0)
-        (*cc)+=1;
+        (reg[9])+=1;
         else
             if ((*op1)< 0)
-                (*cc)+=0x80000000;
+                (reg[9])+=0x80000000;
 }
 
-void or(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void or(long int *op1, long int *op2, long int reg[], long int ram[])
 {
     *op1=(*op1) | (*op2);
-    *cc=0x00000000;
+    reg[9]=0x00000000;
     if ((*op1) == 0)
-        (*cc)+=1;
+        (reg[9])+=1;
         else
             if ((*op1)< 0)
-                (*cc)+=0x80000000;
+                (reg[9])+=0x80000000;
 }
 
-void not(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void not(long int *op1, long int *op2, long int reg[], long int ram[])
 {
     *op1=~(*op1);
-    *cc=0x00000000;
+    reg[9]=0x00000000;
     if ((*op1) == 0)
-        (*cc)+=1;
+        (reg[9])+=1;
         else
             if ((*op1) < 0)
-                (*cc)+=0x80000000;
+                (reg[9])+=0x80000000;
 }
 
-void xor(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void xor(long int *op1, long int *op2, long int reg[], long int ram[])
 {
     *op1=(*op1) ^ (*op2);
-    *cc=0x00000000;
+    reg[9]=0x00000000;
     if ((*op1) == 0)
-        (*cc)+=1;
+        (reg[9])+=1;
         else
             if ((*op1) < 0)
-                (*cc)+=0x80000000;
+                (reg[9])+=0x80000000;
 }
 
-void shl(long int *op1, long int *op2, long int  *cc, long int *ip, long int reg[], long int ram[])
+void shl(long int *op1, long int *op2, long int reg[], long int ram[])
 {
     *op1=(*op1) << (*op2);
 }
 
-void shr(long int *op1, long int *op2, long int  *cc, long int *ip, long int reg[], long int ram[])
+void shr(long int *op1, long int *op2, long int reg[], long int ram[])
 {
     *op1=(*op1) >> (*op2);
 }
 
 
-void jmp(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void jmp(long int *op1, long int *op2, long int reg[], long int ram[])
 {
-    *ip=*op1;
+    reg[4]=*op1;
 }
 
-void je(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void je(long int *op1, long int *op2, long int reg[], long int ram[])
 {
     if ((*op1)==reg[0x0A])
     {
-        *ip=*op2;
+        reg[4]=*op2;
     }
 }
 
-void jg(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void jg(long int *op1, long int *op2, long int reg[], long int ram[])
 {
     if ((*op1)>reg[0x0A])
     {
-        *ip=*op2;
+        reg[4]=*op2;
     }
 }
 
-void jl(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void jl(long int *op1, long int *op2, long int reg[], long int ram[])
 {
     if ((*op1)<reg[0x0A])
     {
-        *ip=*op2;
+        reg[4]=*op2;
     }
 }
 
-void jz(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void jz(long int *op1, long int *op2, long int reg[], long int ram[])
 {
-    if ((*cc)==0x01)
+    if ((reg[9])==0x01)
     {
-        *ip=*op1;
+        reg[4]=*op1;
     }
 }
 
-void jn(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void jn(long int *op1, long int *op2, long int reg[], long int ram[])
 {
-    if ((*cc)==0x80000000)
+    if ((reg[9])==0x80000000)
     {
-        *ip=*op1;
+        reg[4]=*op1;
     }
 }
 
-void jp(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void jp(long int *op1, long int *op2, long int reg[], long int ram[])
 {
-    if (((*cc)!=0x80000000) && ((*cc)!=0x01))
+    if (((reg[9])!=0x80000000) && ((reg[9])!=0x01))
     {
-        *ip=*op1;
+        reg[4]=*op1;
     }
 }
 
-void jnz(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void jnz(long int *op1, long int *op2, long int reg[], long int ram[])
 {
-    if ((*cc)!=0x01)
+    if ((reg[9])!=0x01)
     {
-        *ip=*op1;
+        reg[4]=*op1;
     }
 }
 
-void jnn(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void jnn(long int *op1, long int *op2, long int reg[], long int ram[])
 {
-    if ((*cc)!=0x80000000)
+    if ((reg[9])!=0x80000000)
     {
-        *ip=*op1;
+        reg[4]=*op1;
     }
 }
 
-void jnp(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void jnp(long int *op1, long int *op2, long int reg[], long int ram[])
 {
-    if (((*cc)==0x80000000) || ((*cc)==0x01))
+    if (((reg[9])==0x80000000) || ((reg[9])==0x01))
     {
-        *ip=*op1;
+        reg[4]=*op1;
     }
 }
 
 
-void sys(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void sys(long int *op1, long int *op2, long int reg[], long int ram[])
 {
+    long mascara=0x01;
+    int bits[16], i;
+
+    if (*op1 == 1)
+    {
+        for (i=0;i<16;i++)
+        {
+            if (reg[10] & mascara)
+                bits[i]=1;
+            else
+                bits[i]=0;
+            mascara <<= 1;
+        }
+
+        for (i=0;i<16;i++)
+            printf("%d ",bits[i]);
+        printf("\n");
+
+        if (bits[8] == 0)
+        {
+
+        }
+    }
+    else
+        if (*op1 == 2)
+        {
+
+        }
+        else
+        {
+
+
+        }
+
+
 }
 
-void stop(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[], long int ram[])
+void stop(long int *op1, long int *op2, long int reg[], long int ram[])
 {
-    *ip=-1;
+    reg[4]=-1;
 }

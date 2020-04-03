@@ -6,7 +6,7 @@
 void LeerBinario(long int [], long int []);
 void Ejecucion(long int [], long int []);
 void Interprete(long , long , long , long int [], long int []);
-void (*funciones[0x8F])(long int *op1, long int *op2, long int *cc, long int *ip, long int reg[0x0A],long int ram[]);
+void (*funciones[0x8F])(long int *op1, long int *op2, long int reg[], long int ram[]);
 void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int ram[]);
 void ejecutaOp(long int * Op1, long int * Op2, long int CodOp,long int reg[],long int ram[]);
 
@@ -135,5 +135,5 @@ void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int r
 }
 
 void ejecutaOp(long int * Op1, long int * Op2, long int CodOp,long int reg[],long int ram[]){
-    (*funciones[CodOp])(Op1,Op2,&reg[0x09],&reg[0x04],reg,ram);
+    (*funciones[CodOp])(Op1,Op2,reg,ram);
 }
