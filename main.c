@@ -81,6 +81,8 @@ void Ejecucion(long int reg[], long int ram[]){ // YA ESTA PROBADO QUE LEE BIEN,
         cCelda++;
         if(reg[4]!=1)
             cCelda=(reg[4]-1)*3;
+        else
+            cCelda=0;
     }
 }
 
