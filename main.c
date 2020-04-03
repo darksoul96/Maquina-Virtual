@@ -96,7 +96,7 @@ void Interprete(long celda1, long celda2, long celda3, long int reg[], long int 
         cargaOp(TOp1, &Op1, celda2, reg, ram);
         cargaOp(TOp2, &Op2, celda3, reg, ram);
         ejecutaOp(Op1,Op2,CodOp,reg,ram);
-        printf("IP : %d\t Operacion:%04X \t Operando 1: %d\t , Operando 2 : %d\n",reg[0x04],CodOp,*Op1,*Op2);
+        printf("IP : %d\t Operacion:%04X \t Operando 1: %d\t , Operando 2 : %d \t CC: %d\n",reg[0x04],CodOp,*Op1,*Op2,reg[9]);
 }
 
 
@@ -135,5 +135,5 @@ void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int r
 }
 
 void ejecutaOp(long int * Op1, long int * Op2, long int CodOp,long int reg[],long int ram[]){
-    (*funciones[CodOp])(Op1,Op2,&reg[0x09],&reg[0x04],&reg[0x0A],ram);
+    (*funciones[CodOp])(Op1,Op2,&reg[0x09],&reg[0x04],reg,ram);
 }
