@@ -71,8 +71,6 @@ void Ejecucion(long int reg[], long int ram[]){ // YA ESTA PROBADO QUE LEE BIEN,
     int cCelda=0;
     reg[4]=1;
     while(cCelda>=0 && cCelda<reg[2]){
-        if(reg[4]!=1)
-            cCelda=(reg[4]-1)*3;
         celda1 = ram[cCelda];
         cCelda++;
         celda2 = ram[cCelda];
@@ -81,23 +79,24 @@ void Ejecucion(long int reg[], long int ram[]){ // YA ESTA PROBADO QUE LEE BIEN,
         Interprete(celda1, celda2, celda3, reg, ram);
         cCelda++;
         reg[4]++;
+        if(reg[4]!=1)
+            cCelda=(reg[4]-1)*3;
     }
 }
 
 void Interprete(long celda1, long celda2, long celda3, long int reg[], long int ram[]){
         long int CodOp, TOp1, TOp2, *Op1, *Op2;
-        printf("%08X\t",celda1);
+        //printf("%08X\t",celda1);
         CodOp = (celda1 & 0xFFFF0000)>>16;    // REALIZO UN CORRIMIENTO DE 16 BITS A LA DERECHA, PARA QUEDARME SOLO CON EL 0004
         TOp1 = (celda1 & 0x0000FF00)>>8;
         TOp2 = celda1 & 0x000000FF;
-        printf("%04X\t",CodOp);             // LOS MUESTRO SOLO PARA VER QUE ESTE BIEN CARGADO
-        printf("%02X\t",TOp1);
-        printf("%02X\t",TOp2);
+        //printf("%04X\t",CodOp);             // LOS MUESTRO SOLO PARA VER QUE ESTE BIEN CARGADO
+        //printf("%02X\t",TOp1);
+        //printf("%02X\t\n",TOp2);
         cargaOp(TOp1, &Op1, celda2, reg, ram);
         cargaOp(TOp2, &Op2, celda3, reg, ram);
         ejecutaOp(Op1,Op2,CodOp,reg,ram);
-        ram[32+reg[2]];
-        reg[0x0A];
+        printf("IP : %d\t Operacion:%04X \t Operando 1: %d\t , Operando 2 : %d\n",reg[0x04],CodOp,*Op1,*Op2);
 }
 
 
