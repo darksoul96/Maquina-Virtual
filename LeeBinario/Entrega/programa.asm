@@ -1,1 +1,4 @@
 MOV AX,5
+MOV [32],AX
+MOV [32],55
+MUL AX,[32]
