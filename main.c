@@ -53,12 +53,10 @@ void cargarFunciones(void *func[]){
     funciones[0x8F]=stop;
 }
 
-void LeerBinario(long int reg[], long int ram[])
-{
+void LeerBinario(long int reg[], long int ram[]){
     FILE *Arch;
     Arch=fopen("imagenMemoria.img","r");
-    if (Arch!=NULL)
-    {
+    if (Arch!=NULL){
         fread(reg, sizeof(long int), 16, Arch);
         fread(ram, sizeof(long int), 2000, Arch);
     }
@@ -102,25 +100,21 @@ void Interprete(long celda1, long celda2, long celda3, long int reg[], long int 
 }
 
 
-void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int ram[])
-{
+void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int ram[]){
     long aux;
-    if (TOp == 0x00)
-    {
+
+    if (TOp == 0x00){
         *Op=(long int)malloc(sizeof(long int));
         **Op=celda;
     }
     else
-        if (TOp == 0x01)
-        {
+        if (TOp == 0x01){
             *Op=reg;
             *Op+=celda;
         }
-            else
-            {
+            else{
                 aux=(celda & 0xF0000000)>>28;
-                if (aux == 0x2)
-                {
+                if (aux == 0x2){
                     aux=celda & 0x0FFFFFFF;
                     *Op=ram;
                     *Op+=reg[2]+aux;
