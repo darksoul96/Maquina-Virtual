@@ -310,6 +310,7 @@
                         }
 
                         if (*op1 == 3){
+                            printf("\n");
                             if (bits[0] == 1){
                                 printf("[DS]: %d\n",reg[2]);
                                 printf("[ES]: %d\n",reg[3]);
