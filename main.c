@@ -64,7 +64,7 @@
     }
 
 
-<<<<<<< HEAD
+
 void Ejecucion(long int reg[], long int ram[]){ // YA ESTA PROBADO QUE LEE BIEN, DEJE LOS PRINT PARA VER NOMAS
     long celda1,celda2,celda3;
     long int salto;
@@ -85,7 +85,7 @@ void Ejecucion(long int reg[], long int ram[]){ // YA ESTA PROBADO QUE LEE BIEN,
             cCelda=(reg[4]-1)*3;
         else
             cCelda=0;
-=======
+
     void Ejecucion(long int reg[], long int ram[]){ // YA ESTA PROBADO QUE LEE BIEN, DEJE LOS PRINT PARA VER NOMAS
         long celda1,celda2,celda3;
         int cCelda=0;
@@ -104,7 +104,6 @@ void Ejecucion(long int reg[], long int ram[]){ // YA ESTA PROBADO QUE LEE BIEN,
             else
                 cCelda=0;
         }
->>>>>>> f378f8499446e807cb52d1fd32252360d00cf119
     }
 
     void Interprete(long celda1, long celda2, long celda3, long int reg[], long int ram[]){
