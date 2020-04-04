@@ -282,7 +282,7 @@
                                     printf("%X",ram[reg[2]+reg[13]+i]);
                         }
 
-                        if (bits[2] == 1){ //Imprime celda char
+                        if (bits[4] == 1){ //Imprime celda char
                             mascara=0xFF;
                             if ((bits[12] == 0) && (bits[8] == 0))
                                 for (i=0;i<reg[12];i++){
