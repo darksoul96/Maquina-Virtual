@@ -64,6 +64,28 @@
     }
 
 
+
+void Ejecucion(long int reg[], long int ram[]){ // YA ESTA PROBADO QUE LEE BIEN, DEJE LOS PRINT PARA VER NOMAS
+    long celda1,celda2,celda3;
+    long int salto;
+    int cCelda=0;
+    reg[4]=1;
+    salto = reg[4];
+    while(cCelda>=0 && cCelda<reg[2]){
+        celda1 = ram[cCelda];
+        cCelda++;
+        celda2 = ram[cCelda];
+        cCelda++;
+        celda3 = ram[cCelda];
+        Interprete(celda1, celda2, celda3, reg, ram);
+        if(salto == reg[4])
+            reg[4]++;
+        cCelda++;
+        if(reg[4]!=1)
+            cCelda=(reg[4]-1)*3;
+        else
+            cCelda=0;
+
     void Ejecucion(long int reg[], long int ram[]){ // YA ESTA PROBADO QUE LEE BIEN, DEJE LOS PRINT PARA VER NOMAS
         long celda1,celda2,celda3;
         int cCelda=0;
