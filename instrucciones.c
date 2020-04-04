@@ -372,7 +372,6 @@
                     }
             }
 
-            void stop(long int *op1, long int *op2, long int reg[], long int ram[])
-            {
+            void stop(long int *op1, long int *op2, long int reg[], long int ram[]){
                 reg[4]=-1;
             }
