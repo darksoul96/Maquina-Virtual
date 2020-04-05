@@ -79,13 +79,13 @@
             Interprete(celda1, celda2, celda3, reg, ram);
             if(salto == reg[4]){
                 reg[4]++;
-                salto = reg[4];
             }
             cCelda++;
             if(reg[4]!=1)
                 cCelda=(reg[4]-1)*3;
             else
                 cCelda=0;
+            salto = reg[4];
         }
     }
 
