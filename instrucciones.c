@@ -403,7 +403,7 @@
                                 else
                                     printf("[FX]: .\n");
                             }
-
+                        printf("\n");
                         }
 
                     }
