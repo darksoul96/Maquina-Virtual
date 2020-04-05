@@ -198,90 +198,73 @@
                         mascara <<= 1;
                     }
 
-                if (*op1 == 1){
-                    if (bits[8] == 0){
-                        if (bits[0] == 1){
-                            for (i=0;i<reg[12];i++){
-                               scanf("%d",&aux);
-                               ram[reg[13]+reg[2]+i]=aux;
-                            }
-                        }
-                        else
-                            if (bits[2] == 1){
+                if (*op1 == 1){             // ES DE TIPO LECTURA
+                    if (bits[8] == 0){      // ES DE TIPO INTERPRETAR CONTENIDO
+                        if(bits[12]==0){    // ESCRIBE PROMPT
+                            if (bits[0] == 1){  // ES DECIMAL
                                 for (i=0;i<reg[12];i++){
-                                    scanf("%o",&aux);
+                                    printf("[%04d]:",(reg[13]+i));
+                                    scanf("%d",&aux);
                                     ram[reg[13]+reg[2]+i]=aux;
                                 }
                             }
-                        else{
-                            for (i=0;i<reg[12];i++){
-                                scanf("%x",&aux);
-                                ram[reg[13]+reg[2]+i]=aux;
+                            else
+                                if (bits[2] == 1){               // ES OCTAL
+                                    for (i=0;i<reg[12];i++){
+                                        printf("[%04d]:",(reg[13]+i));
+                                        scanf("%o",&aux);
+                                        ram[reg[13]+reg[2]+i]=aux;
+                                    }
+                                }
+                                else{                              // ES HEXA
+                                    for (i=0;i<reg[12];i++){
+                                        printf("[%04d]:",(reg[13]+i));
+                                        scanf("%x",&aux);
+                                        ram[reg[13]+reg[2]+i]=aux;
+                                    }
+                                }
+                        }
+                        else{                               // NO ESCRIBE PROMPT
+                            if (bits[0] == 1){
+                                for (i=0;i<reg[12];i++){
+                                    scanf("%d",&aux);
+                                    ram[reg[13]+reg[2]+i]=aux;
+                                }
                             }
+                            else
+                                if (bits[2] == 1){
+                                    for (i=0;i<reg[12];i++){
+                                        scanf("%o",&aux);
+                                        ram[reg[13]+reg[2]+i]=aux;
+                                    }
+                                }
+                                else{
+                                    for (i=0;i<reg[12];i++){
+                                        scanf("%x",&aux);
+                                        ram[reg[13]+reg[2]+i]=aux;
+                                    }
+                                }
                         }
                     }
-                    else{
-                        for (i=0;i<reg[12];i++){
+                    else{                      // LEE CHARACTER
+                        if(bits[12]==0){       // ESCRIBE PROMPT
+                            printf("[%04d]:",(reg[13]));
+                        }
+                        i=0;
+                        while ((auxc!=0x0A) && (i<reg[12])) {
                             scanf("%c",&auxc);
                             ram[reg[13]+reg[2]+i]=auxc;
+                            i++;
                         }
+                        if(auxc == 0x0A){
+                            ram[reg[13]+reg[2]+i] = '%00';
+                        }
+
                     }
 
                 }
                 else
                     if ((*op1 == 2) || (*op1 == 3)){
-
-                        if (bits[0] == 1){ //Imprime celda decimal
-                            if ((bits[12] == 0) && (bits[8] == 0))
-                                for (i=0;i<reg[12];i++)
-                                    printf("[%04ld]: %d\n",(reg[13]+i),ram[reg[2]+reg[13]+i]);
-                            else
-                            if((bits[12] == 0) && (bits[8] != 0))
-                                for (i=0;i<reg[12];i++)
-                                    printf("[%04ld]: %d",(reg[13]+i),ram[reg[2]+reg[13]+i]);
-                            else
-                            if ((bits[12] != 0) && (bits[8] == 0))
-                                for (i=0;i<reg[12];i++)
-                                    printf("%d\n",ram[reg[2]+reg[13]+i]);
-                            else
-                                for (i=0;i<reg[12];i++)
-                                    printf("%d",ram[reg[2]+reg[13]+i]);
-                        }
-
-                        if (bits[2] == 1){ //Imprime celda octal
-                            if ((bits[12] == 0) && (bits[8] == 0))
-                                for (i=0;i<reg[12];i++)
-                                    printf("[%04ld]: %o\n",(reg[13]+i),ram[reg[2]+reg[13]+i]);
-                            else
-                            if((bits[12] == 0) && (bits[8] != 0))
-                                for (i=0;i<reg[12];i++)
-                                    printf("[%04ld]: %o",(reg[13]+i),ram[reg[2]+reg[13]+i]);
-                            else
-                            if ((bits[12] != 0) && (bits[8] == 0))
-                                for (i=0;i<reg[12];i++)
-                                    printf("%o\n",ram[reg[2]+reg[13]+i]);
-                            else
-                                for (i=0;i<reg[12];i++)
-                                    printf("%o",ram[reg[2]+reg[13]+i]);
-                        }
-
-                        if (bits[3] == 1){ //Imprime celda hexa
-                            if ((bits[12] == 0) && (bits[8] == 0))
-                                for (i=0;i<reg[12];i++)
-                                    printf("[%04ld]: %X\n",(reg[13]+i),ram[reg[2]+reg[13]+i]);
-                            else
-                            if((bits[12] == 0) && (bits[8] != 0))
-                                for (i=0;i<reg[12];i++)
-                                    printf("[%04ld]: %X",(reg[13]+i),ram[reg[2]+reg[13]+i]);
-                            else
-                            if ((bits[12] != 0) && (bits[8] == 0))
-                                for (i=0;i<reg[12];i++)
-                                    printf("%X\n",ram[reg[2]+reg[13]+i]);
-                            else
-                                for (i=0;i<reg[12];i++)
-                                    printf("%X",ram[reg[2]+reg[13]+i]);
-                        }
-
                         if (bits[4] == 1){ //Imprime celda char
                             mascara=0xFF;
                             if ((bits[12] == 0) && (bits[8] == 0))
@@ -309,6 +292,57 @@
                                 }
                         }
 
+
+                        if (bits[3] == 1){ //Imprime celda hexa
+                            if ((bits[12] == 0) && (bits[8] == 0))
+                                for (i=0;i<reg[12];i++)
+                                    printf("[%04ld]: %%%X\n",(reg[13]+i),ram[reg[2]+reg[13]+i]);
+                            else
+                            if((bits[12] == 0) && (bits[8] != 0))
+                                for (i=0;i<reg[12];i++)
+                                    printf("[%04ld]: %%%X",(reg[13]+i),ram[reg[2]+reg[13]+i]);
+                            else
+                            if ((bits[12] != 0) && (bits[8] == 0))
+                                for (i=0;i<reg[12];i++)
+                                    printf("%%%X\n",ram[reg[2]+reg[13]+i]);
+                            else
+                                for (i=0;i<reg[12];i++)
+                                    printf("%%%X",ram[reg[2]+reg[13]+i]);
+                        }
+
+                        if (bits[2] == 1){ //Imprime celda octal
+                            if ((bits[12] == 0) && (bits[8] == 0))
+                                for (i=0;i<reg[12];i++)
+                                    printf("[%04ld]: @%o\n",(reg[13]+i),ram[reg[2]+reg[13]+i]);
+                            else
+                            if((bits[12] == 0) && (bits[8] != 0))
+                                for (i=0;i<reg[12];i++)
+                                    printf("[%04ld]: @%o",(reg[13]+i),ram[reg[2]+reg[13]+i]);
+                            else
+                            if ((bits[12] != 0) && (bits[8] == 0))
+                                for (i=0;i<reg[12];i++)
+                                    printf("@%o\n",ram[reg[2]+reg[13]+i]);
+                            else
+                                for (i=0;i<reg[12];i++)
+                                    printf("@%o",ram[reg[2]+reg[13]+i]);
+                        }
+
+                        if (bits[0] == 1){ //Imprime celda decimal
+                            if ((bits[12] == 0) && (bits[8] == 0))
+                                for (i=0;i<reg[12];i++)
+                                    printf("[%04ld]: %d\n",(reg[13]+i),ram[reg[2]+reg[13]+i]);
+                            else
+                            if((bits[12] == 0) && (bits[8] != 0))
+                                for (i=0;i<reg[12];i++)
+                                    printf("[%04ld]: %d",(reg[13]+i),ram[reg[2]+reg[13]+i]);
+                            else
+                            if ((bits[12] != 0) && (bits[8] == 0))
+                                for (i=0;i<reg[12];i++)
+                                    printf("%d\n",ram[reg[2]+reg[13]+i]);
+                            else
+                                for (i=0;i<reg[12];i++)
+                                    printf("%d",ram[reg[2]+reg[13]+i]);
+                        }
                         if (*op1 == 3){
                             printf("\n");
                             if (bits[0] == 1){
