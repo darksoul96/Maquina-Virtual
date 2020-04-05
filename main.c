@@ -9,7 +9,6 @@
         void (*funciones[0x8F])(long int *op1, long int *op2, long int reg[], long int ram[]);
         void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int ram[]);
         void ejecutaOp(long int * Op1, long int * Op2, long int CodOp,long int reg[],long int ram[]);
-
         void cargarFunciones(void *[]);
 
         int main()

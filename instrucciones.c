@@ -265,6 +265,50 @@
                 }
                 else
                     if ((*op1 == 2) || (*op1 == 3)){
+                        if(bits[12]==0){
+                            for(i=0;i<reg[12];i++){
+                                printf("[%04ld]:",(reg[13]+i));
+                                if(bits[4]==1){ // IMPRIME CELDA CHAR
+                                     mascara=0xFF;
+                                     auxc=(char)(ram[reg[2]+reg[13]+i] & mascara);
+                                     printf(" %c",auxc);
+                                }
+                                if(bits[3]==1){
+                                    printf(" %%%X",ram[reg[2]+reg[13]+i]);
+                                }
+                                if(bits[2]==1){
+                                    printf(" @%o",ram[reg[2]+reg[13]+i]);
+                                }
+                                if(bits[0]==1){
+                                    printf(" %d",ram[reg[2]+reg[13]+i]);
+                                }
+                                if(bits[8]==0){
+                                    printf("\n");
+                                }
+                            }
+                        }
+                        else{
+                                for(i=0;i<reg[12];i++){
+                                    if(bits[4]==1){ // IMPRIME CELDA CHAR
+                                        mascara=0xFF;
+                                        auxc=(char)(ram[reg[2]+reg[13]+i] & mascara);
+                                        printf(" %c",auxc);
+                                    }
+                                    if(bits[3]==1){
+                                        printf(" %%%X",ram[reg[2]+reg[13]+i]);
+                                    }
+                                    if(bits[2]==1){
+                                        printf(" @%o",ram[reg[2]+reg[13]+i]);
+                                    }
+                                    if(bits[0]==1){
+                                        printf(" %d",ram[reg[2]+reg[13]+i]);
+                                    }
+                                    if(bits[8]==1){
+                                        printf("\n");
+                                    }
+
+                                }
+                        }
                         if (bits[4] == 1){ //Imprime celda char
                             mascara=0xFF;
                             if ((bits[12] == 0) && (bits[8] == 0))
