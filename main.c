@@ -1,7 +1,7 @@
         #include <stdio.h>
         #include <stdlib.h>
         #include "util.h"
-        #include "instrucciones.c"
+        #include "instrucciones.h"
 
         void LeerBinario(long int [], long int []);
         void Ejecucion(long int [], long int []);
@@ -9,7 +9,6 @@
         void (*funciones[0x8F])(long int *op1, long int *op2, long int reg[], long int ram[]);
         void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int ram[]);
         void ejecutaOp(long int * Op1, long int * Op2, long int CodOp,long int reg[],long int ram[]);
-
         void cargarFunciones(void *[]);
 
         int main()
@@ -78,14 +77,17 @@
             cCelda++;
             celda3 = ram[cCelda];
             Interprete(celda1, celda2, celda3, reg, ram);
-            if(salto == reg[4])
+            if(salto == reg[4]){
                 reg[4]++;
+            }
             cCelda++;
             if(reg[4]!=1)
                 cCelda=(reg[4]-1)*3;
             else
                 cCelda=0;
+            salto = reg[4];
         }
+    }
 
         void Interprete(long celda1, long celda2, long celda3, long int reg[], long int ram[]){
                 long int CodOp, TOp1, TOp2, *Op1, *Op2;
@@ -99,7 +101,8 @@
                 cargaOp(TOp1, &Op1, celda2, reg, ram);
                 cargaOp(TOp2, &Op2, celda3, reg, ram);
                 ejecutaOp(Op1,Op2,CodOp,reg,ram);
-                printf("IP : %d\t Operacion:%04X \t Operando 1: %d\t , Operando 2 : %d \t CC: %d\n",reg[0x04],CodOp,*Op1,*Op2,reg[9]);
+                //printf("IP : %d\t Operacion:%04X \t Operando 1: %d\t , Operando 2 : %d \t CC: %d\n",reg[0x04],CodOp,*Op1,*Op2,reg[9]);
+
         }
 
 
