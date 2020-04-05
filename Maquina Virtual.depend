@@ -14,11 +14,11 @@
 
 1585362214 D
 
-1585952593 source:c:\users\usr\documents\github\maquina-virtual\main.c
+1586119921 source:c:\users\usr\documents\github\maquina-virtual\main.c
 	<stdio.h>
 	<stdlib.h>
 	"util.h"
-	"instrucciones.c"
+	"instrucciones.h"
 
 1586065508 source:c:\users\seba\documents\github\maquina-virtual\main.c
 	<stdio.h>
@@ -67,4 +67,12 @@
 	"instrucciones.h"
 
 1586065523 c:\users\seba\documents\github\maquina-virtual\instrucciones.h
+
+1586119708 c:\users\usr\documents\github\maquina-virtual\instrucciones.h
+
+1586119708 source:c:\users\usr\documents\github\maquina-virtual\instrucciones.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"instrucciones.h"
 
