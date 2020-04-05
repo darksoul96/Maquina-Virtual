@@ -1,7 +1,7 @@
         #include <stdio.h>
         #include <stdlib.h>
         #include "util.h"
-        #include "instrucciones.c"
+        #include "instrucciones.h"
 
         void LeerBinario(long int [], long int []);
         void Ejecucion(long int [], long int []);

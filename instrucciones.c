@@ -1,6 +1,7 @@
             #include <stdio.h>
             #include <stdlib.h>
             #include <time.h>
+            #include "instrucciones.h"
 
             void mov(long int *op1, long int *op2, long int reg[], long int ram[]){
                 *op1=*op2;
