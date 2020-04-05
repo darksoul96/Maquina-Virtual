@@ -271,7 +271,10 @@
                                 if(bits[4]==1){ // IMPRIME CELDA CHAR
                                      mascara=0xFF;
                                      auxc=(char)(ram[reg[2]+reg[13]+i] & mascara);
-                                     printf(" %c",auxc);
+                                     if(isalpha(auxc))
+                                        printf(" %c",auxc);
+                                    else
+                                        printf(".");
                                 }
                                 if(bits[3]==1){
                                     printf(" %%%X",ram[reg[2]+reg[13]+i]);
@@ -308,84 +311,6 @@
                                     }
 
                                 }
-                        }
-                        if (bits[4] == 1){ //Imprime celda char
-                            mascara=0xFF;
-                            if ((bits[12] == 0) && (bits[8] == 0))
-                                for (i=0;i<reg[12];i++){
-                                    auxc=(char)(ram[reg[2]+reg[13]+i] & mascara);
-                                    printf("[%04ld]: %c\n",(reg[13]+i),auxc);
-                                }
-                            else
-                            if((bits[12] == 0) && (bits[8] != 0))
-                                for (i=0;i<reg[12];i++){
-                                    auxc=(char)(ram[reg[2]+reg[13]+i] & mascara);
-                                    printf("[%04ld]: %c",(reg[13]+i),ram[reg[2]+reg[13]+i]);
-                                }
-                            else
-                            if ((bits[12] != 0) && (bits[8] == 0))
-                                for (i=0;i<reg[12];i++){
-                                    auxc=(char)(ram[reg[2]+reg[13]+i] & mascara);
-                                    printf("%c\n",ram[reg[2]+reg[13]+i]);
-                                }
-
-                            else
-                                for (i=0;i<reg[12];i++){
-                                    auxc=(char)(ram[reg[2]+reg[13]+i] & mascara);
-                                    printf("%c",ram[reg[2]+reg[13]+i]);
-                                }
-                        }
-
-
-                        if (bits[3] == 1){ //Imprime celda hexa
-                            if ((bits[12] == 0) && (bits[8] == 0))
-                                for (i=0;i<reg[12];i++)
-                                    printf("[%04ld]: %%%X\n",(reg[13]+i),ram[reg[2]+reg[13]+i]);
-                            else
-                            if((bits[12] == 0) && (bits[8] != 0))
-                                for (i=0;i<reg[12];i++)
-                                    printf("[%04ld]: %%%X",(reg[13]+i),ram[reg[2]+reg[13]+i]);
-                            else
-                            if ((bits[12] != 0) && (bits[8] == 0))
-                                for (i=0;i<reg[12];i++)
-                                    printf("%%%X\n",ram[reg[2]+reg[13]+i]);
-                            else
-                                for (i=0;i<reg[12];i++)
-                                    printf("%%%X",ram[reg[2]+reg[13]+i]);
-                        }
-
-                        if (bits[2] == 1){ //Imprime celda octal
-                            if ((bits[12] == 0) && (bits[8] == 0))
-                                for (i=0;i<reg[12];i++)
-                                    printf("[%04ld]: @%o\n",(reg[13]+i),ram[reg[2]+reg[13]+i]);
-                            else
-                            if((bits[12] == 0) && (bits[8] != 0))
-                                for (i=0;i<reg[12];i++)
-                                    printf("[%04ld]: @%o",(reg[13]+i),ram[reg[2]+reg[13]+i]);
-                            else
-                            if ((bits[12] != 0) && (bits[8] == 0))
-                                for (i=0;i<reg[12];i++)
-                                    printf("@%o\n",ram[reg[2]+reg[13]+i]);
-                            else
-                                for (i=0;i<reg[12];i++)
-                                    printf("@%o",ram[reg[2]+reg[13]+i]);
-                        }
-
-                        if (bits[0] == 1){ //Imprime celda decimal
-                            if ((bits[12] == 0) && (bits[8] == 0))
-                                for (i=0;i<reg[12];i++)
-                                    printf("[%04ld]: %d\n",(reg[13]+i),ram[reg[2]+reg[13]+i]);
-                            else
-                            if((bits[12] == 0) && (bits[8] != 0))
-                                for (i=0;i<reg[12];i++)
-                                    printf("[%04ld]: %d",(reg[13]+i),ram[reg[2]+reg[13]+i]);
-                            else
-                            if ((bits[12] != 0) && (bits[8] == 0))
-                                for (i=0;i<reg[12];i++)
-                                    printf("%d\n",ram[reg[2]+reg[13]+i]);
-                            else
-                                for (i=0;i<reg[12];i++)
-                                    printf("%d",ram[reg[2]+reg[13]+i]);
                         }
                         if (*op1 == 3){
                             printf("\n");
@@ -433,17 +358,50 @@
                             else
                             if (bits[4] == 1){
                                 mascara=0xFF;
-                                printf("[DS]: %c\n",(char)(reg[2] & mascara));
-                                printf("[ES]: %c\n",(char)(reg[3] & mascara));
-                                printf("[IP]: %c\n",(char)(reg[4] & mascara));
-                                printf("[AC]: %c\n",(char)(reg[8] & mascara));
-                                printf("[CC]: %c\n",(char)(reg[9] & mascara));
-                                printf("[AX]: %c\n",(char)(reg[10] & mascara));
-                                printf("[BX]: %c\n",(char)(reg[11] & mascara));
-                                printf("[CX]: %c\n",(char)(reg[12] & mascara));
-                                printf("[DX]: %c\n",(char)(reg[13] & mascara));
-                                printf("[EX]: %c\n",(char)(reg[14] & mascara));
-                                printf("[FX]: %c\n",(char)(reg[15] & mascara));
+                                if(isalpha((char)(reg[2] & mascara)))
+                                    printf("[DS]: %c\n",(char)(reg[2] & mascara));
+                                else
+                                    printf("[DS]: .\n");
+                                if(isalpha((char)(reg[3] & mascara)))
+                                    printf("[ES]: %c\n",(char)(reg[3] & mascara));
+                                else
+                                    printf("[ES]: .\n");
+                                if(isalpha((char)(reg[4] & mascara)))
+                                    printf("[IP]: %c\n",(char)(reg[4] & mascara));
+                                else
+                                    printf("[IP]: .\n");
+                                if(isalpha((char)(reg[8] & mascara)))
+                                    printf("[AC]: %c\n",(char)(reg[8] & mascara));
+                                else
+                                    printf("[AC]: .\n");
+                                if(isalpha((char)(reg[9] & mascara)))
+                                    printf("[CC]: %c\n",(char)(reg[9] & mascara));
+                                else
+                                    printf("[CC]: .\n");
+                                if(isalpha((char)(reg[10] & mascara)))
+                                    printf("[AX]: %c\n",(char)(reg[10] & mascara));
+                                else
+                                    printf("[AX]: %c\n");
+                                if(isalpha((char)(reg[11] & mascara)))
+                                    printf("[BX]: %c\n",(char)(reg[11] & mascara));
+                                else
+                                    printf("[BX]: .\n");
+                                if(isalpha((char)(reg[12] & mascara)))
+                                    printf("[CX]: %c\n",(char)(reg[12] & mascara));
+                                else
+                                     printf("[CX]: .\n");
+                                if(isalpha((char)(reg[13] & mascara)))
+                                    printf("[DX]: %c\n",(char)(reg[13] & mascara));
+                                else
+                                    printf("[DX]: .\n");
+                                if(isalpha((char)(reg[14] & mascara)))
+                                    printf("[EX]: %c\n",(char)(reg[14] & mascara));
+                                else
+                                    printf("[EX]: .\n");
+                                if(isalpha((char)(reg[15] & mascara)))
+                                    printf("[FX]: %c\n",(char)(reg[15] & mascara));
+                                else
+                                    printf("[FX]: .\n");
                             }
 
                         }

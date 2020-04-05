@@ -20,7 +20,7 @@
 	"util.h"
 	"instrucciones.c"
 
-1586057481 source:c:\users\seba\documents\github\maquina-virtual\main.c
+1586059550 source:c:\users\seba\documents\github\maquina-virtual\main.c
 	<stdio.h>
 	<stdlib.h>
 	"util.h"
@@ -55,7 +55,7 @@
 
 1585362214 c:\users\seba\documents\github\maquina-virtual\util.h
 
-1586058053 c:\users\seba\documents\github\maquina-virtual\instrucciones.c
+1586059449 c:\users\seba\documents\github\maquina-virtual\instrucciones.c
 	<stdio.h>
 	<stdlib.h>
 	<time.h>

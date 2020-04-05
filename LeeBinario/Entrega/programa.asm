@@ -1,9 +1,7 @@
-MOV [1],'H'
-MOV [2],'o'
-MOV [3],'l'
-MOV [4],'a'
-MOV [5],%00
-MOV DX,1
-MOV CX,4
-MOV AX, %0010
+MOV [10],%41
+SHL [10],8
+OR [10],%61
+MOV DX,10
+MOV CX,1
+MOV AX,%001F
 SYS 3

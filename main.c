@@ -101,7 +101,7 @@
                 cargaOp(TOp1, &Op1, celda2, reg, ram);
                 cargaOp(TOp2, &Op2, celda3, reg, ram);
                 ejecutaOp(Op1,Op2,CodOp,reg,ram);
-                printf("IP : %d\t Operacion:%04X \t Operando 1: %d\t , Operando 2 : %d \t CC: %d\n",reg[0x04],CodOp,*Op1,*Op2,reg[9]);
+                //printf("IP : %d\t Operacion:%04X \t Operando 1: %d\t , Operando 2 : %d \t CC: %d\n",reg[0x04],CodOp,*Op1,*Op2,reg[9]);
 
         }
 
