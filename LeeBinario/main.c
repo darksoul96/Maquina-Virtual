@@ -21,6 +21,6 @@ int main(){
     //ram[0]=0x00040102;
     //ram[1]=0x0A;
     //ram[2]=0x20000020;
-    for (i=0;i<19; i+=3)
+    for (i=0;i<50; i+=3)
             printf("\n[%08X]\t\t\t%08X %08X %08X",i,ram[i],ram[i+1],ram[i+2]);
 }
