@@ -84,18 +84,20 @@ void cargarFunciones(void* func[])
 
 void LeerBinario(long int reg[], long int ram[], int argc, char *argv[],int imagenes)
 {
-    int i=0,full=0;
+    int i=1,full=0;
     FILE *Arch;
-    ram[i] = imagenes;
-    while(full==0 && i<ram[0]){
-        Arch=fopen(argv[1],"rb");
-
-    }
-    if (Arch!=NULL)
+    ram[0] = imagenes;
+    ram[1] = 0;
+    while(full==0 && i<=ram[0])
     {
-        fread(reg, sizeof(long int), 16, Arch);
-        fread(ram, sizeof(long int), 2000, Arch);
-        fclose(Arch);
+        Arch=fopen(argv[i],"rb");
+        if (Arch!=NULL)
+        {
+            fread(ram, sizeof(long int), 2000, Arch);
+            fread(reg, sizeof(long int), 16, Arch);
+            fclose(Arch);
+        }
+
     }
     else
         printf("No se encontro el archivo");
