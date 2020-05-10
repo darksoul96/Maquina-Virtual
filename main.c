@@ -26,8 +26,28 @@ int main(int argc, char *argv[])
 
 void cuentaProcFlag(int *imagenes, int flags[],int argc, char*argv[])
 {
-    int i=argc;
-    while (argv[i])
+    int i=argc, condicion=1, contador=0;
+    while (condicion==1){
+        if (strcmp(argv[i],"-d")==0){
+            flags[3]=1;
+            contador++;
+        }
+        else if (strcmp(argv[i],"-c")==0){
+            flags[2]=1;
+            contador++;
+        }
+        else if (strcmp(argv[i],"-b")==0){
+            flags[1]=1;
+            contador++;
+        }
+        else if (strcmp(argv[i],"-a")==0){
+            flags[0]=1;
+            contador++;
+        }
+        else
+            condicion=0;
+    }
+    *imagenes=argc-contador;
 }
 
 
