@@ -70,7 +70,7 @@ void LeerBinario(long int reg[], long int ram[], int argc, char *argv[],int imag
     Arch=fopen(argv[1],"rb");
     if (Arch!=NULL)
     {
-        fread(reg, sizeof(long int), 16, Arch);
+        fread(reg, sizeof(long int), 16, Arch);     // comentario
         fread(ram, sizeof(long int), 2000, Arch);
         fclose(Arch);
     }
