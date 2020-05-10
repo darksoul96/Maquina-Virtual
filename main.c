@@ -84,16 +84,17 @@ void cargarFunciones(void* func[])
 
 void LeerBinario(long int reg[], long int ram[], int argc, char *argv[],int imagenes)
 {
-    int i=1,full=0;
+    int i=0,full=0;
     FILE *Arch;
     ram[0] = imagenes;
     ram[1] = 0;
-    while(full==0 && i<=ram[0])
+    while(full==0 && i<ram[0])
     {
         Arch=fopen(argv[i],"rb");
         if (Arch!=NULL)
         {
-            fread(ram, sizeof(long int), 2000, Arch);
+            regAux = 16*i+2;
+            fread(ram[regAux], sizeof(long int), 16, Arch);
             fread(reg, sizeof(long int), 16, Arch);
             fclose(Arch);
         }
