@@ -10,7 +10,7 @@ void (*funciones[0x8F])(long int *op1, long int *op2, long int reg[], long int r
 void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int ram[]);
 void ejecutaOp(long int * Op1, long int * Op2, long int CodOp,long int reg[],long int ram[]);
 void cargarFunciones(void *[]);
-void cuentaProcFlag(int *imagenes, char flags[],int argc, char*argv[]);
+void cuentaProcFlag(int *imagenes, int flags[],int argc, char*argv[]);
 
 int main(int argc, char *argv[])
 {
@@ -24,10 +24,10 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void cuentaProcFlag(int *imagenes, char flags[],int argc, char*argv[])
+void cuentaProcFlag(int *imagenes, int flags[],int argc, char*argv[])
 {
-    // for con un if?
-    //linea
+    int i=argc;
+    while (argv[i])
 }
 
 
