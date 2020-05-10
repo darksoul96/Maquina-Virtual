@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
 void cuentaProcFlag(int *imagenes, char flags[],int argc, char*argv[])
 {
     // for con un if?
+    //linea
 }
 
 
