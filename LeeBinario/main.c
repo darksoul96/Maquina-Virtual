@@ -5,7 +5,7 @@ int main(){
     long reg[16],ram[2000];
     FILE *Arch;
     int i;
-    Arch=fopen("imagenMemoria.img","r");
+    Arch=fopen("imagenMemoria.img","rb");
     if (Arch!=NULL)
     {
         for (i=0; i<16; i++){
