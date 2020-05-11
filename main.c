@@ -3,7 +3,7 @@
 #include "util.h"
 #include "instrucciones.h"
 
-void LeerBinario(long int [], long int [], int argc, char *argv[],int imagenes);
+void LeerBinario(long int reg[], long int ram[], int argc, char *argv[],int imagenes);
 void Ejecucion(long int [], long int []);
 void Interprete(long, long, long, long int [], long int []);
 void (*funciones[0x8F])(long int *op1, long int *op2, long int reg[], long int ram[]);
@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
     void * funciones[0x8F];
     int flags[4]={0};
     int imagenes;
+    cuentaProcFlag(&imagenes,flags,argc,argv);
     cargarFunciones(funciones);
     LeerBinario(reg,ram,argc,argv,imagenes);
     Ejecucion(reg,ram);
@@ -26,7 +27,9 @@ int main(int argc, char *argv[])
 
 void cuentaProcFlag(int *imagenes, int flags[],int argc, char*argv[])
 {
-    int i=argc, condicion=1, contador=0;
+    int i, condicion=1, contador=0;
+    argc = argc -1 ;                // el primer valor de argc no tiene nada util
+    i = argc;
     while (condicion==1){
         if (strcmp(argv[i],"-d")==0){
             flags[3]=1;
@@ -42,12 +45,15 @@ void cuentaProcFlag(int *imagenes, int flags[],int argc, char*argv[])
         }
         else if (strcmp(argv[i],"-a")==0){
             flags[0]=1;
+            condicion =0;                   // como estan en orden, si lee una -a ya terminaron las flags.
             contador++;
         }
         else
             condicion=0;
+        i--;
     }
     *imagenes=argc-contador;
+
 }
 
 
