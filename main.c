@@ -5,7 +5,7 @@
 
 void LeerBinario(long int reg[], long int ram[], int argc, char *argv[],int imagenes,int * full);
 void Ejecucion(long int reg[], long int ram[], int flags[]);
-void EjecucionImg(long int [], long int [],int flags[]);
+void EjecucionImg(long int [], long int [],int flags[],int *error);
 void Interprete(long, long, long, long int [], long int []);
 void (*funciones[0x8F])(long int *op1, long int *op2, long int reg[], long int ram[]);
 void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int ram[]);
@@ -15,7 +15,7 @@ void cuentaProcFlag(int *imagenes, int flags[],int argc, char*argv[]);
 
 int main(int argc, char *argv[])
 {
-    long int reg[16], ram[8092];
+    long int reg[16], ram[8192];
     void * funciones[0x8F];
     int flags[4]={0};
     int imagenes,full;
@@ -138,15 +138,16 @@ void LeerBinario(long int reg[], long int ram[], int argc, char *argv[],int imag
 
 void Ejecucion(long int reg[], long int ram[], int flags[])
 {
-    int i;
-    while(ram[1]<ram[0])
+    int i,error=0;
+    while(ram[1]<ram[0] && error==0)
     {
         for(i=0; i<16; i++)
             reg[i] = ram[ram[1]*16+2 + i];
-        EjecucionImg(reg,ram,flags);
+        EjecucionImg(reg,ram,flags,&error);
         for(i=0; i<16; i++)
             ram[ram[1]*16+2 + i] = reg[i];
-        ram[1]++;
+        if(error==0)
+            ram[1]++;
 
     }
     if(flags[0]==1){
@@ -164,7 +165,7 @@ void Ejecucion(long int reg[], long int ram[], int flags[])
 }
 
 
-void EjecucionImg(long int reg[], long int ram[],int flags[])
+void EjecucionImg(long int reg[], long int ram[],int flags[],int * error)
 {
     long celda1,celda2,celda3;
     long int salto;

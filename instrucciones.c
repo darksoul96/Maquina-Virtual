@@ -5,10 +5,61 @@
 
 
 
-void push(long int *op1, long int *op2, long int reg[], long int ram[], int flags[]) {}
-void pop(long int *op1, long int *op2, long int reg[], long int ram[], int flags[]) {}
-void call(long int *op1, long int *op2, long int reg[], long int ram[], int flags[]) {}
-void ret(long int *op1, long int *op2, long int reg[], long int ram[], int flags[]) {}
+void push(long int *op1, long int *op2, long int reg[], long int ram[], int flags[], int *error)
+{
+    reg[6]--;
+    if(reg[6]>0)
+        ram[reg[5]+reg[6]] = *op1;
+    else
+    {
+        reg[4]=-1;
+        *error =1;
+        printf("Stack Overflow\n");
+    }
+}
+
+void pop(long int *op1, long int *op2, long int reg[], long int ram[], int flags[], int * error)
+{
+    if(reg[6]+reg[5]< reg[1] + reg[0])
+    {
+        *op1 = ram[reg[5]+ reg[6]];
+        reg[6]++;
+    }
+    else
+    {
+        reg[4]=-1;
+        *error =1;
+        printf("Stack Underflow\n");
+    }
+}
+
+void call(long int *op1, long int *op2, long int reg[], long int ram[], int flags[], int * error)
+{
+    reg[6]--;
+    if(reg[6]>0)
+        ram[reg[5]+reg[6]] = reg[4]+1;
+    else
+    {
+        reg[4]=-1;
+        *error =1;
+        printf("Stack Overflow\n");
+    }
+}
+
+void ret(long int *op1, long int *op2, long int reg[], long int ram[], int flags[],int * error)
+{
+    if(reg[6]+reg[5]< reg[1] + reg[0])
+    {
+        reg[4] = ram[reg[5] + reg[6]];
+        reg[6]++;
+    }
+    else
+    {
+        reg[4]=-1;
+        *error =1;
+        printf("Stack Underflow\n");
+    }
+}
 
 
 void mov(long int *op1, long int *op2, long int reg[], long int ram[], int flags[])

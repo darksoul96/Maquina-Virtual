@@ -25,7 +25,7 @@
     void jnp(long int *op1, long int *op2, long int reg[], long int ram[], int flags[]);
     void sys(long int *op1, long int *op2, long int reg[], long int ram[], int flags[]);
     void stop(long int *op1, long int *op2, long int reg[], long int ram[], int flags[]);
-    void push(long int *op1, long int *op2, long int reg[], long int ram[], int flags[]);
-    void pop(long int *op1, long int *op2, long int reg[], long int ram[], int flags[]);
-    void call(long int *op1, long int *op2, long int reg[], long int ram[], int flags[]);
-    void ret(long int *op1, long int *op2, long int reg[], long int ram[], int flags[]);
+    void push(long int *op1, long int *op2, long int reg[], long int ram[], int flags[], int *error);
+    void pop(long int *op1, long int *op2, long int reg[], long int ram[], int flags[], int * error);
+    void call(long int *op1, long int *op2, long int reg[], long int ram[], int flags[], int * error);
+    void ret(long int *op1, long int *op2, long int reg[], long int ram[], int flags[],int * error);
