@@ -269,9 +269,24 @@ void jnp(long int *op1, long int *op2, long int reg[], long int ram[], int flags
         reg[4]=*op1;
 }
 
-void slen(long int *op1, long int *op2, long int reg[], long int ram[])
+void slen(long int *op1, long int *op2, long int reg[], long int ram[], int flags[])
 {
-    *op1=*op2
+    *op1=0;
+    int i=*op2;
+    while (ram[i] != 0x00){
+        (*op1)++;
+        i++;
+    }
+}
+
+void smov(long int *op1, long int *op2, long int reg[], long int ram[], int flags[])
+{
+    int i=*op2, j=*op1;
+    while(ram[i] != 0x00){
+        ram[j]=ram[i];
+        i++;
+        j++;
+    }
 }
 
 void sys(long int *op1, long int *op2, long int reg[], long int ram[], int flags[])
