@@ -46,6 +46,7 @@ void cuentaProcFlag(int *imagenes, int flags[],int argc, char*argv[])
         }
         else
             condicion=0;
+        i--;
     }
     *imagenes=argc-contador;
 }
