@@ -289,6 +289,20 @@ void smov(long int *op1, long int *op2, long int reg[], long int ram[], int flag
     }
 }
 
+void scmp(long int *op1, long int *op2, long int reg[], long int ram[], int flags[])
+{
+    int i=*op1, j=*op2;
+    reg[9]=0x00;
+    while ((ram[i] != 0x00 || ram[j]!=0x00) && (ram[i]==ram[j])){
+        i++;
+        j++;
+    }
+    if (ram[i]>ram[j])
+        reg[9]=0x01;
+    else
+        reg[9]=0x80000000;
+}
+
 void sys(long int *op1, long int *op2, long int reg[], long int ram[], int flags[])
 {
     long mascara=0x01, aux;
