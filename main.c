@@ -111,8 +111,8 @@ void LeerBinario(long int reg[], long int ram[], int argc, char *argv[],int imag
                 reg[3]+= corrimiento;
             reg[5]+= corrimiento;
             for(j=0; j<16; j++)             // cargo los registros corregidos en su correspondiente lugar de la ram.
-                ram[16*i+2] = reg[j];
-            fread(ram[reg[1]],sizeof(long int),dataSegmentOriginal,Arch);   // Cargo en Ram el CS, partiendo desde el CS corregido.
+                ram[16*i+2+j] = reg[j];
+            fread(&ram[reg[1]],sizeof(long int),dataSegmentOriginal,Arch);   // Cargo en Ram el CS, partiendo desde el CS corregido.
             corrimiento += reg[0];
             if(corrimiento > 8192)
                 full = 1;
@@ -123,13 +123,11 @@ void LeerBinario(long int reg[], long int ram[], int argc, char *argv[],int imag
             printf("Archivo %d es invalido",i);
         }
 
+        i++;
     }
     if(full==1)
         printf("Memoria insuficiente");
-    i++;
 }
-
-
 
 void Ejecucion(long int reg[], long int ram[])
 {
