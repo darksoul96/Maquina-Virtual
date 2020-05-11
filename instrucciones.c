@@ -306,7 +306,7 @@ void sys(long int *op1, long int *op2, long int reg[], long int ram[])
             while ((auxc!=0x0A) && (i<reg[12]));
             if(auxc == 0x0A)
             {
-                ram[reg[13]+reg[2]+i-1] = '%00';
+                ram[reg[13]+reg[2]+i-1] = "\0";
             }
         }
 

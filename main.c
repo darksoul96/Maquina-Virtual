@@ -84,25 +84,43 @@ void cargarFunciones(void* func[])
 
 void LeerBinario(long int reg[], long int ram[], int argc, char *argv[],int imagenes)
 {
-    int i=0,full=0;
+    int i=0,j,full=0,corrimiento,imgactual,dataSegmentOriginal;
     FILE *Arch;
     ram[0] = imagenes;
     ram[1] = 0;
+    corrimiento = 16*imagenes+2;
     while(full==0 && i<ram[0])
     {
-        Arch=fopen(argv[i],"rb");
+        imgactual = i+1;                          // argv arranca de 1, por eso le sumo 1.
+        Arch=fopen(argv[imgactual],"rb");
         if (Arch!=NULL)
         {
-            regAux = 16*i+2;
-            fread(ram[regAux], sizeof(long int), 16, Arch);
-            fread(reg, sizeof(long int), 16, Arch);
+            fread(reg, sizeof(long int), 16, Arch);     // Leo los reg de la img en los de la MV y los recalculo 1 por 1.
+            dataSegmentOriginal = reg[2];               // Guardo la longitud del CS original para copiar en ram con fread.
+            reg[1] += corrimiento;
+            reg[2] += corrimiento;
+            if(reg[3]== -1 )
+                reg[3] = ram[ (16 * (i) + 2)  + 3]; // rescato el ES de la imagen anterior. acordarse que i=0 equivale a la img 1.
+            else
+                reg[3]+= corrimiento;
+            reg[5]+= corrimiento;
+            for(j=0; j<16; j++)             // cargo los registros corregidos en su correspondiente lugar de la ram.
+                ram[16*i+2] = reg[j];
+            fread(ram[reg[1]],sizeof(long int),dataSegmentOriginal,Arch);   // Cargo en Ram el CS, partiendo desde el CS corregido.
+            corrimiento += reg[0];
+            if(corrimiento > 8192)
+                full = 1;
             fclose(Arch);
+        }
+        else
+        {
+            printf("Archivo %d es invalido",i);
         }
 
     }
-    else
-        printf("No se encontro el archivo");
-    fclose(Arch);
+    if(full==1)
+        printf("Memoria insuficiente");
+    i++;
 }
 
 
