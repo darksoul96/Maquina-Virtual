@@ -274,7 +274,7 @@ void sys(long int *op1, long int *op2, long int reg[], long int ram[], int flags
 {
     long mascara=0x01, aux;
     int bits[16], i;
-    char auxc;
+    char auxc,respuesta;
 
     for (i=0; i<16; i++)
     {
@@ -308,7 +308,7 @@ void sys(long int *op1, long int *op2, long int reg[], long int ram[], int flags
                             scanf("%o",&aux);
                             ram[reg[13]+reg[2]+i]=aux;
                         }
-                    }
+                    }reg
                     else                               // ES HEXA
                     {
                         for (i=0; i<reg[12]; i++)
@@ -532,6 +532,16 @@ void sys(long int *op1, long int *op2, long int reg[], long int ram[], int flags
                             }
                 printf("\n");
             }
+
+        }
+        else{
+                if(*op1 == 0){                      // en los breakpoints puede haber erores? que el usuario ingrese mal un numero a proposito?
+                    if(flags[1]==1){
+                        printf("[%d] cmd:",reg[4]);
+                        scanf("%c",&respuesta);
+
+                    }
+                }
 
         }
 }
