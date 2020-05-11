@@ -79,6 +79,9 @@ void cargarFunciones(void* func[])
     funciones[0x27]=jnz;
     funciones[0x28]=jnp;
     funciones[0x29]=jnn;
+    funciones[0x50]=slen;
+    funciones[0x51]=smov;
+    funciones[0x53]=scmp;
     funciones[0x81]=sys;
     funciones[0x8F]=stop;
 }

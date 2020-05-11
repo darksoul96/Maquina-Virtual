@@ -210,6 +210,10 @@ void jnp(long int *op1, long int *op2, long int reg[], long int ram[])
         reg[4]=*op1;
 }
 
+void slen(long int *op1, long int *op2, long int reg[], long int ram[])
+{
+    *op1=*op2
+}
 
 void sys(long int *op1, long int *op2, long int reg[], long int ram[])
 {
