@@ -3,8 +3,9 @@
 #include "util.h"
 #include "instrucciones.h"
 
-void LeerBinario(long int reg[], long int ram[], int argc, char *argv[],int imagenes);
-void Ejecucion(long int [], long int []);
+void LeerBinario(long int reg[], long int ram[], int argc, char *argv[],int imagenes,int * full);
+void Ejecucion(long int reg[], long int ram[], int flags[]);
+void EjecucionImg(long int [], long int [],int flags[]);
 void Interprete(long, long, long, long int [], long int []);
 void (*funciones[0x8F])(long int *op1, long int *op2, long int reg[], long int ram[]);
 void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int ram[]);
@@ -17,11 +18,12 @@ int main(int argc, char *argv[])
     long int reg[16], ram[8092];
     void * funciones[0x8F];
     int flags[4]={0};
-    int imagenes;
+    int imagenes,full;
     cuentaProcFlag(&imagenes,flags,argc,argv);
     cargarFunciones(funciones);
-    LeerBinario(reg,ram,argc,argv,imagenes);
-    Ejecucion(reg,ram);
+    LeerBinario(reg,ram,argc,argv,imagenes,&full);
+    if(full!=1)
+        Ejecucion(reg,ram,flags);
     return 0;
 }
 
@@ -88,14 +90,15 @@ void cargarFunciones(void* func[])
     funciones[0x8F]=stop;
 }
 
-void LeerBinario(long int reg[], long int ram[], int argc, char *argv[],int imagenes)
+void LeerBinario(long int reg[], long int ram[], int argc, char *argv[],int imagenes,int *full)
 {
-    int i=0,j,full=0,corrimiento,imgactual,dataSegmentOriginal;
+    int i=0,j,corrimiento,imgactual,dataSegmentOriginal;
+    *full =0;
     FILE *Arch;
     ram[0] = imagenes;
     ram[1] = 0;
     corrimiento = 16*imagenes+2;
-    while(full==0 && i<ram[0])
+    while(*full==0 && i<ram[0])
     {
         imgactual = i+1;                          // argv arranca de 1, por eso le sumo 1.
         Arch=fopen(argv[imgactual],"rb");
@@ -106,16 +109,16 @@ void LeerBinario(long int reg[], long int ram[], int argc, char *argv[],int imag
             reg[1] += corrimiento;
             reg[2] += corrimiento;
             if(reg[3]== -1 )
-                reg[3] = ram[ (16 * (i) + 2)  + 3]; // rescato el ES de la imagen anterior. acordarse que i=0 equivale a la img 1.
+                reg[3] = ram[ (16 * (i) + 2)  + 3]; // rescato el ES de la imagen anterior. acordarse que i = imgactual -1.
             else
                 reg[3]+= corrimiento;
             reg[5]+= corrimiento;
             for(j=0; j<16; j++)             // cargo los registros corregidos en su correspondiente lugar de la ram.
                 ram[16*i+2+j] = reg[j];
             fread(&ram[reg[1]],sizeof(long int),dataSegmentOriginal,Arch);   // Cargo en Ram el CS, partiendo desde el CS corregido.
-            corrimiento += reg[0];
+            corrimiento += reg[0];              // al corrimiento le sumo el PS de la img actual.
             if(corrimiento > 8192)
-                full = 1;
+                (*full) = 1;
             fclose(Arch);
         }
         else
@@ -125,18 +128,46 @@ void LeerBinario(long int reg[], long int ram[], int argc, char *argv[],int imag
 
         i++;
     }
-    if(full==1)
+    if(*full==1)
         printf("Memoria insuficiente");
 }
 
-void Ejecucion(long int reg[], long int ram[])
+void Ejecucion(long int reg[], long int ram[], int flags[])
+{
+    int i;
+    while(ram[1]<ram[0])
+    {
+        for(i=0; i<16; i++)
+            reg[i] = ram[ram[1]*16+2 + i];
+        EjecucionImg(reg,ram,flags);
+        for(i=0; i<16; i++)
+            ram[ram[1]*16+2 + i] = reg[i];
+        ram[1]++;
+
+    }
+    if(flags[0]==1){
+        printf("\n");
+        printf("Cantidad total de procesos = %d \n",ram[0]);
+        printf("Cantidad de procesos finalizados correctamente = %d \n",ram[1]);
+        for(i=0;i<ram[1];i++){
+            printf("Proceso %d:\n",i+1);
+            printf("PS = %ld | CS = %ld | DS = %ld | ES = %ld \n",ram[16 * i +2],ram[16 * i +2+1],ram[16 * i +2+2],ram[16 * i +2+3]);
+            printf("IP = %ld | SS = %ld | SP = %ld | BP = %ld \n",ram[16 * i +4],ram[16 * i +2+5],ram[16 * i +2+6],ram[16 * i +2+7]);
+            printf("AC = %ld | CC = %ld | AX = %ld | BX = %ld \n",ram[16 * i +8],ram[16 * i +2+9],ram[16 * i +2+10],ram[16 * i +2+11]);
+            printf("CX = %ld | DX = %ld | EX = %ld | FX = %ld \n",ram[16 * i +12],ram[16 * i +2+13],ram[16 * i +2+14],ram[16 * i +2+15]);
+        }
+    }
+}
+
+
+void EjecucionImg(long int reg[], long int ram[],int flags[])
 {
     long celda1,celda2,celda3;
     long int salto;
-    int cCelda=0;
+    int cCelda=reg[1];
     reg[4]=1;
     salto = reg[4];
-    while(cCelda>=0 && cCelda<reg[2])
+    while(cCelda>=reg[1] && cCelda<reg[2])
     {
         celda1 = ram[cCelda];
         cCelda++;
@@ -146,7 +177,7 @@ void Ejecucion(long int reg[], long int ram[])
         Interprete(celda1, celda2, celda3, reg, ram);
         if(salto == reg[4])
             reg[4]++;
-        cCelda=(reg[4]-1)*3;
+        cCelda=(reg[4]-1)*3 + reg[1];
         salto = reg[4];
     }
 }
