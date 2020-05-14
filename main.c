@@ -6,6 +6,7 @@
         void LeerBinario(long int reg[], long int ram[], int argc, char *argv[],int imagenes,int * full);
         void Ejecucion(long int reg[], long int ram[], int flags[]);
         void EjecucionImg(long int [], long int [],int flags[],int *error);
+        void cargaDissasembly(long int ram,long int reg[], char * regChar[],char * funcionesChar[],char * muestraD[] , int n);
         void Interprete(long, long, long, long int [], long int []);
         void (*funciones[0x8F])(long int *op1, long int *op2, long int reg[], long int ram[]);
         void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int ram[]);
@@ -152,6 +153,10 @@
             {
                 for(i=0; i<16; i++)
                     reg[i] = ram[ram[1]*16+2 + i];
+                if(flags[3]==1){
+                    char muestraD[reg[2]-reg[1]];
+                    cargaDissasembly(ram,reg,regChar,funcionesChar,muestraD,reg[2]-reg[1]); // Carga el dissasembler para mostrarlo
+                    }
                 EjecucionImg(reg,ram,flags,&error);
                 for(i=0; i<16; i++)
                     ram[ram[1]*16+2 + i] = reg[i];
