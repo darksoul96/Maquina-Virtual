@@ -22,8 +22,11 @@
             cuentaProcFlag(&imagenes,flags,argc,argv);
             cargarFunciones(funciones);
             LeerBinario(reg,ram,argc,argv,imagenes,&full);
-            if(full!=1)
+            if(full!=1){
+                if(flags[2]==1)
+                    system("cls");
                 Ejecucion(reg,ram,flags);
+            }
             return 0;
         }
 
