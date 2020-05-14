@@ -93,6 +93,9 @@
             funciones[0x44]=push;
             funciones[0x45]=pop;
             funciones[0x48]=ret;
+            funciones[0x50]=slen;
+            funciones[0x51]=smov;
+            funciones[0x53]=scmp;
             funciones[0x81]=sys;
             funciones[0x8F]=stop;
         }
@@ -259,4 +262,63 @@
         void ejecutaOp(long int * Op1, long int * Op2, long int CodOp,long int reg[],long int ram[])
         {
             (*funciones[CodOp])(Op1,Op2,reg,ram);
+        }
+
+        void CargaRegChar(char *regChar[])
+        {
+            regChar[0]="PS";
+            regChar[1]="CS";
+            regChar[2]="DS";
+            regChar[3]="ES";
+            regChar[4]="IP";
+            regChar[5]="SS";
+            regChar[6]="SP";
+            regChar[7]="BP";
+            regChar[8]="AC";
+            regChar[9]="CC";
+            regChar[10]="AX";
+            regChar[11]="BX";
+            regChar[12]="CX";
+            regChar[13]="DX";
+            regChar[14]="EX";
+            regChar[15]="FX";
+        }
+
+        void cargaFuncionesChar(char *funcionesChar[])
+        {
+            funcionesChar[0x01]="mov";
+            funcionesChar[0x02]="add";
+            funcionesChar[0x03]="sub";
+            funcionesChar[0x04]="mul";
+            funcionesChar[0x05]="divi";
+            funcionesChar[0x06]="mod";
+            funcionesChar[0x13]="cmp";
+            funcionesChar[0x17]="swap";
+            funcionesChar[0x19]="rnd";
+            funcionesChar[0x31]="and";
+            funcionesChar[0x32]="or";
+            funcionesChar[0x33]="not";
+            funcionesChar[0x34]="xor";
+            funcionesChar[0x37]="shl";
+            funcionesChar[0x38]="shr";
+            funcionesChar[0x20]="jmp";
+            funcionesChar[0x21]="je";
+            funcionesChar[0x22]="jg";
+            funcionesChar[0x23]="jl";
+            funcionesChar[0x24]="jz";
+            funcionesChar[0x25]="jp";
+            funcionesChar[0x26]="jn";
+            funcionesChar[0x27]="jnz";
+            funcionesChar[0x28]="jnp";
+            funcionesChar[0x29]="jnn";
+            funcionesChar[0x40]="call";
+            funcionesChar[0x44]="push";
+            funcionesChar[0x45]="pop";
+            funcionesChar[0x48]="ret";
+            funcionesChar[0x50]="slen";
+            funcionesChar[0x51]="smov";
+            funcionesChar[0x53]="scmp";
+            funcionesChar[0x81]="sys";
+            funcionesChar[0x8F]="stop";
+
         }
