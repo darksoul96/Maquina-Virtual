@@ -592,7 +592,18 @@ void sys(long int *op1, long int *op2, long int reg[], long int ram[], int flags
             system("cls");
         if (flags[3]==1)
         {
-
+            i=0;
+            int j = (reg[2] - reg[1])/3;
+            while(i<j){
+                while(i!=reg[4]){
+                    printf("%s",muestraD[i]);
+                    i++;
+                }
+                if(i==reg[4]){
+                    printf(">> %s",muestraD[i]);
+                }
+                i++;
+            }
         }
     }
     else
