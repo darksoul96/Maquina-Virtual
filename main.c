@@ -5,7 +5,7 @@
         #include "string.h"
 
         void LeerBinario(long int reg[], long int ram[], int argc, char *argv[],int imagenes,int * full);
-        void Ejecucion(long int reg[], long int ram[], int flags[],char * regChar, char * funcionesChar);
+        void Ejecucion(long int reg[], long int ram[], int flags[],char * regChar[], char * funcionesChar[]);
         void EjecucionImg(long int [], long int [],int flags[],int *error);
         void cargaDissasembly(long int ram[],long int reg[], char * regChar[],char * funcionesChar[],char * muestraD[] , int n);
         void Interprete(long, long, long, long int [], long int []);
@@ -15,8 +15,8 @@
         void cargarFunciones(void *[]);
         void cuentaProcFlag(int *imagenes, int flags[],int argc, char*argv[]);
         void cargaFuncionesChar(char *funcionesChar[]);
-        void cargaLinea(long int celda1,long int celda2, long int celda3, char * linea,int pos,int j,char * regChar, char * funcionesChar);
-        void chequeaTipoOP(long int celda, char * operando, long int tipoOp,char * regChar, char * funcionesChar);
+        void cargaLinea(long int celda1,long int celda2, long int celda3, char * linea,int pos,int j,char * regChar[], char * funcionesChar[]);
+        void chequeaTipoOP(long int celda, char * operando, long int tipoOp,char * regChar[], char * funcionesChar[]);
         void CargaRegChar(char *regChar[]);
 
 
@@ -24,7 +24,8 @@
         {
             long int reg[16], ram[8192];
             void * funciones[0x8F];
-            char * funcionesChar,regChar;
+            char * funcionesChar[0x8F];
+            char * regChar[16];
             int flags[4]={0};
             int imagenes,full;
             cuentaProcFlag(&imagenes,flags,argc,argv);
@@ -152,7 +153,7 @@
                 printf("Memoria insuficiente");
         }
 
-        void Ejecucion(long int reg[], long int ram[], int flags[],char * regChar, char * funcionesChar)
+        void Ejecucion(long int reg[], long int ram[], int flags[],char * regChar[], char * funcionesChar[])
         {
             int i,error=0;
 
@@ -163,7 +164,11 @@
                 for(i=0; i<16; i++)
                     reg[i] = ram[ram[1]*16+2 + i];
                 if(flags[3]==1){
-                    char muestraD[reg[2]-reg[1]];
+                    char * muestraD[reg[2]-reg[1]];
+                    for(i=0;i<=reg[2]-reg[1];i++){
+                        muestraD[i] = (char*) malloc(50*sizeof(char));
+                        strcpy(muestraD[i],"");
+                    }
                     cargaDissasembly(ram,reg,regChar,funcionesChar,muestraD,reg[2]-reg[1]); // Carga el dissasembler para mostrarlo
                     }
                 EjecucionImg(reg,ram,flags,&error);
@@ -283,6 +288,7 @@
             int i=0,j=0,pos;
             long celda1,celda2,celda3,mascara;
             char * linea;
+            linea = (char*) malloc(100 *sizeof(char));
             while(i<n){
                 pos = reg[1]+i;
                 celda1 = ram[reg[1]+i];
@@ -293,42 +299,53 @@
                 cargaLinea(celda1,celda2,celda3,linea,pos,j+1,regChar,funcionesChar);
                 strcpy(muestraD[j],linea);
                 j++;
+                i++;
                 }
                 for(i=0;i<j;i++){
-                    printf(muestraD[i]);
+                    printf("%s \n", muestraD[i]);
                 }
             }
 
-        void cargaLinea(long int celda1,long int celda2, long int celda3, char * linea,int pos,int j,char * regChar, char * funcionesChar){
+        void cargaLinea(long int celda1,long int celda2, long int celda3, char * linea,int pos,int j,char * regChar[], char * funcionesChar[]){
             long int mnemonico,tipoOp1,tipoOp2;
-            char * operando1,operando2;
+            char * operando1;
+            char * operando2;
+            operando1= (char*) malloc(50*sizeof(char));
+            operando2= (char*) malloc(50*sizeof(char));
             mnemonico = (celda1 & 0xFFFF0000) >> 16;
-            if (mnemonico == 0x82){     // SYS, NO VA NADA EN EL OPERANDO 2
-                sprintf(linea,"[%04d]: %X %X %X %d: %s \t %s ",pos,celda1,celda2,celda3,j,funcionesChar[mnemonico],operando1);
+            tipoOp1 = (celda1 & 0x0000FF00) >> 8;
+            chequeaTipoOP(celda2,operando1,tipoOp1,regChar,funcionesChar);
+            if (mnemonico == 0x81){     // SYS, NO VA NADA EN EL OPERANDO 2
+                sprintf(linea,"[%04d]: %08X %08X %08X    %d: %s \t %s ",pos,celda1,celda2,celda3,j,funcionesChar[mnemonico],operando1);
             }
             else{           // no es sys
-                tipoOp1 = (celda1 & 0x0000FF00) >> 8;
                 tipoOp2 = (celda1 & 0x000000FF);
-                chequeaTipoOP(celda2,operando1,tipoOp1,regChar,funcionesChar);
-                chequeaTipoOP(celda2,operando2,tipoOp2,regChar,funcionesChar);
-                sprintf(linea,"[%04d]: %X %X %X %d: %s \t %s,%s",pos,celda1,celda2,celda3,j,funcionesChar[mnemonico],operando1,operando2);
+                chequeaTipoOP(celda3,operando2,tipoOp2,regChar,funcionesChar);
+                sprintf(linea,"[%04d]: %08X %08X %08X    %d: %s \t %s,%s",pos,celda1,celda2,celda3,j,funcionesChar[mnemonico],operando1,operando2);
             }
         }
 
-        void chequeaTipoOP(long int celda, char * operando, long int tipoOp,char * regChar, char * funcionesChar){
+        void chequeaTipoOP(long int celda, char * operando, long int tipoOp,char * regChar[], char * funcionesChar[]){
             long aux,aux2,aux3;
+
             if(tipoOp == 0x00){ // operando inmediato
                 sprintf(operando,"%d",celda);
             }
             else{
                 if(tipoOp == 0x01){ // operando de registro
-                    strcpy(operando,regChar[celda]);
+                    aux = celda & 0x000000FF;
+                    strcpy(operando,regChar[aux]);
                 }
                 else{
                     if(tipoOp == 0x02){ // operando directo
                         aux = (celda & 0xF0000000) >> 32;
                         aux2 = (celda & 0x0000FFFF);
-                        sprintf(operando,"[%s:%d]",regChar[aux],aux2);
+                        if(aux == 0x00){
+                            sprintf(operando,"[%s:%d]",regChar[2],aux2);
+                        }
+                        else{
+                            sprintf(operando,"[%s:%d]",regChar[aux],aux2);
+                        }
                     }
                     else{
                         if(tipoOp == 0x03){ // operando indirecto
@@ -345,59 +362,69 @@
 
         void CargaRegChar(char *regChar[])
         {
-            strcpy(regChar[0]="PS");
-            strcpy(regChar[1]="CS");
-            strcpy(regChar[2]="DS");
-            strcpy(regChar[3]="ES");
-            strcpy(regChar[4]="IP");
-            strcpy(regChar[5]="SS");
-            strcpy(regChar[6]="SP");
-            strcpy(regChar[7]="BP");
-            strcpy(regChar[8]="AC");
-            strcpy(regChar[9]="CC");
-            strcpy(regChar[10]="AX");
-            strcpy(regChar[11]="BX");
-            strcpy(regChar[12]="CX");
-            strcpy(regChar[13]="DX");
-            strcpy(regChar[14]="EX");
-            strcpy(regChar[15]="FX");
+            int i;
+            for(i=0;i<=16;i++){
+                regChar[i] = (char*) malloc(5*sizeof(char));
+                strcpy(regChar[i],"");
+            }
+            strcpy(regChar[0],"PS");
+            strcpy(regChar[1],"CS");
+            strcpy(regChar[2],"DS");
+            strcpy(regChar[3],"ES");
+            strcpy(regChar[4],"IP");
+            strcpy(regChar[5],"SS");
+            strcpy(regChar[6],"SP");
+            strcpy(regChar[7],"BP");
+            strcpy(regChar[8],"AC");
+            strcpy(regChar[9],"CC");
+            strcpy(regChar[10],"AX");
+            strcpy(regChar[11],"BX");
+            strcpy(regChar[12],"CX");
+            strcpy(regChar[13],"DX");
+            strcpy(regChar[14],"EX");
+            strcpy(regChar[15],"FX");
         }
 
-        void cargaFuncionesChar(char *funcionesChar[])
-        {
-            strcpy(funcionesChar[0x01]="MOV");
-            strcpy(funcionesChar[0x02]="ADD");
-            strcpy(funcionesChar[0x03]="SUB");
-            strcpy(funcionesChar[0x04]="MUL");
-            strcpy(funcionesChar[0x05]="DIVI");
-            strcpy(funcionesChar[0x06]="MOD");
-            strcpy(funcionesChar[0x13]="CMP");
-            strcpy(funcionesChar[0x17]="SWAP");
-            strcpy(funcionesChar[0x19]="RND");
-            strcpy(funcionesChar[0x31]="AND");
-            strcpy(funcionesChar[0x32]="OR");
-            strcpy(funcionesChar[0x33]="NOT");
-            strcpy(funcionesChar[0x34]="XOR");
-            strcpy(funcionesChar[0x37]="SHL");
-            strcpy(funcionesChar[0x38]="SHR");
-            strcpy(funcionesChar[0x20]="JMP");
-            strcpy(funcionesChar[0x21]="JE");
-            strcpy(funcionesChar[0x22]="JG");
-            strcpy(funcionesChar[0x23]="JL");
-            strcpy(funcionesChar[0x24]="JZ");
-            strcpy(funcionesChar[0x25]="JP");
-            strcpy(funcionesChar[0x26]="JN");
-            strcpy(funcionesChar[0x27]="JNZ");
-            strcpy(funcionesChar[0x28]="JNP");
-            strcpy(funcionesChar[0x29]="JNN");
-            strcpy(funcionesChar[0x40]="CALL");
-            strcpy(funcionesChar[0x44]="PUSH");
-            strcpy(funcionesChar[0x45]="POP");
-            strcpy(funcionesChar[0x48]="RET");
-            strcpy(funcionesChar[0x50]="SLEN");
-            strcpy(funcionesChar[0x51]="SMOV");
-            strcpy(funcionesChar[0x53]="SCMP");
-            strcpy(funcionesChar[0x81]="SYS");
-            strcpy(funcionesChar[0x8F]="STOP");
+        void cargaFuncionesChar(char *funcionesChar[]){
+            int i;
+            for (i=0; i<=0x8F; i++)
+            {
+                funcionesChar[i] = (char*) malloc(5*sizeof(char));
+                strcpy(funcionesChar[i],"");
+            }
+            strcpy(funcionesChar[0x01],"MOV");
+            strcpy(funcionesChar[0x02],"ADD");
+            strcpy(funcionesChar[0x03],"SUB");
+            strcpy(funcionesChar[0x04],"MUL");
+            strcpy(funcionesChar[0x05],"DIVI");
+            strcpy(funcionesChar[0x06],"MOD");
+            strcpy(funcionesChar[0x13],"CMP");
+            strcpy(funcionesChar[0x17],"SWAP");
+            strcpy(funcionesChar[0x19],"RND");
+            strcpy(funcionesChar[0x31],"AND");
+            strcpy(funcionesChar[0x32],"OR");
+            strcpy(funcionesChar[0x33],"NOT");
+            strcpy(funcionesChar[0x34],"XOR");
+            strcpy(funcionesChar[0x37],"SHL");
+            strcpy(funcionesChar[0x38],"SHR");
+            strcpy(funcionesChar[0x20],"JMP");
+            strcpy(funcionesChar[0x21],"JE");
+            strcpy(funcionesChar[0x22],"JG");
+            strcpy(funcionesChar[0x23],"JL");
+            strcpy(funcionesChar[0x24],"JZ");
+            strcpy(funcionesChar[0x25],"JP");
+            strcpy(funcionesChar[0x26],"JN");
+            strcpy(funcionesChar[0x27],"JNZ");
+            strcpy(funcionesChar[0x28],"JNP");
+            strcpy(funcionesChar[0x29],"JNN");
+            strcpy(funcionesChar[0x40],"CALL");
+            strcpy(funcionesChar[0x44],"PUSH");
+            strcpy(funcionesChar[0x45],"POP");
+            strcpy(funcionesChar[0x48],"RET");
+            strcpy(funcionesChar[0x50],"SLEN");
+            strcpy(funcionesChar[0x51],"SMOV");
+            strcpy(funcionesChar[0x53],"SCMP");
+            strcpy(funcionesChar[0x81],"SYS");
+            strcpy(funcionesChar[0x8F],"STOP");
 
         }
