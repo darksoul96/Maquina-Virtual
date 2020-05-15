@@ -29,3 +29,6 @@
     void pop(long int *op1, long int *op2, long int reg[], long int ram[], int flags[], int * error);
     void call(long int *op1, long int *op2, long int reg[], long int ram[], int flags[], int * error);
     void ret(long int *op1, long int *op2, long int reg[], long int ram[], int flags[],int * error);
+    void scmp(long int *op1, long int *op2, long int reg[], long int ram[], int flags[]);
+    void smov(long int *op1, long int *op2, long int reg[], long int ram[], int flags[]);
+    void slen(long int *op1, long int *op2, long int reg[], long int ram[], int flags[]);
