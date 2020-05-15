@@ -294,6 +294,9 @@
                 strcpy(muestraD[j],linea);
                 j++;
                 }
+                for(i=0;i<j;i++){
+                    printf(muestraD[i]);
+                }
             }
 
         void cargaLinea(long int celda1,long int celda2, long int celda3, char * linea,int pos,int j,char * regChar, char * funcionesChar){
@@ -301,23 +304,40 @@
             char * operando1,operando2;
             mnemonico = (celda1 & 0xFFFF0000) >> 16;
             if (mnemonico == 0x82){     // SYS, NO VA NADA EN EL OPERANDO 2
-
+                sprintf(linea,"[%04d]: %X %X %X %d: %s \t %s ",pos,celda1,celda2,celda3,j,funcionesChar[mnemonico],operando1);
             }
             else{           // no es sys
                 tipoOp1 = (celda1 & 0x0000FF00) >> 8;
                 tipoOp2 = (celda1 & 0x000000FF);
                 chequeaTipoOP(celda2,operando1,tipoOp1,regChar,funcionesChar);
+                chequeaTipoOP(celda2,operando2,tipoOp2,regChar,funcionesChar);
+                sprintf(linea,"[%04d]: %X %X %X %d: %s \t %s,%s",pos,celda1,celda2,celda3,j,funcionesChar[mnemonico],operando1,operando2);
             }
-            sprintf("[%04d: %X %X %X %d: ",pos,celda1,celda2,celda3,j);
         }
 
         void chequeaTipoOP(long int celda, char * operando, long int tipoOp,char * regChar, char * funcionesChar){
-            if(tipoOp == 0x00){ // operando directo
+            long aux,aux2,aux3;
+            if(tipoOp == 0x00){ // operando inmediato
                 sprintf(operando,"%d",celda);
             }
             else{
                 if(tipoOp == 0x01){ // operando de registro
                     strcpy(operando,regChar[celda]);
+                }
+                else{
+                    if(tipoOp == 0x02){ // operando directo
+                        aux = (celda & 0xF0000000) >> 32;
+                        aux2 = (celda & 0x0000FFFF);
+                        sprintf(operando,"[%s:%d]",regChar[aux],aux2);
+                    }
+                    else{
+                        if(tipoOp == 0x03){ // operando indirecto
+                            aux = (celda & 0xF0000000) >> 32;
+                            aux2 = (celda & 0x0000000F);
+                            aux3 = (celda & 0x0000FFF0) > 4;
+                            sprintf(operando,"[%s:%s + %d]",regChar[aux],regChar[aux2],aux3);
+                        }
+                    }
                 }
             }
         }
