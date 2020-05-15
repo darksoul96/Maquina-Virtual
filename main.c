@@ -6,12 +6,12 @@
 
         void LeerBinario(long int reg[], long int ram[], int argc, char *argv[],int imagenes,int * full);
         void Ejecucion(long int reg[], long int ram[], int flags[],char * regChar[], char * funcionesChar[]);
-        void EjecucionImg(long int [], long int [],int flags[],int *error);
+        void EjecucionImg(long int [], long int [],int flags[],int *error,char * muestraD[]);
         void cargaDissasembly(long int ram[],long int reg[], char * regChar[],char * funcionesChar[],char * muestraD[] , int n);
-        void Interprete(long, long, long, long int [], long int []);
-        void (*funciones[0x8F])(long int *op1, long int *op2, long int reg[], long int ram[]);
+        void Interprete(long, long, long, long int [], long int [],int * error, char * muestraD []);
+        void (*funciones[0x8F])(long int *op1, long int *op2, long int reg[], long int ram[],int * error, char * muestraD);
         void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int ram[]);
-        void ejecutaOp(long int * Op1, long int * Op2, long int CodOp,long int reg[],long int ram[]);
+        void ejecutaOp(long int * Op1, long int * Op2, long int CodOp,long int reg[],long int ram[],int * error, char * muestraD[]);
         void cargarFunciones(void *[]);
         void cuentaProcFlag(int *imagenes, int flags[],int argc, char*argv[]);
         void cargaFuncionesChar(char *funcionesChar[]);
@@ -163,15 +163,15 @@
             {
                 for(i=0; i<16; i++)
                     reg[i] = ram[ram[1]*16+2 + i];
+                char * muestraD[reg[2]-reg[1]];
                 if(flags[3]==1){
-                    char * muestraD[reg[2]-reg[1]];
                     for(i=0;i<=reg[2]-reg[1];i++){
                         muestraD[i] = (char*) malloc(50*sizeof(char));
                         strcpy(muestraD[i],"");
                     }
                     cargaDissasembly(ram,reg,regChar,funcionesChar,muestraD,reg[2]-reg[1]); // Carga el dissasembler para mostrarlo
                     }
-                EjecucionImg(reg,ram,flags,&error);
+                EjecucionImg(reg,ram,flags,&error,muestraD);
                 for(i=0; i<16; i++)
                     ram[ram[1]*16+2 + i] = reg[i];
                 if(error==0)
@@ -193,7 +193,7 @@
         }
 
 
-        void EjecucionImg(long int reg[], long int ram[],int flags[],int * error)
+        void EjecucionImg(long int reg[], long int ram[],int flags[],int * error,char * muestraD[])
         {
             long celda1,celda2,celda3;
             long int salto;
@@ -207,7 +207,7 @@
                 celda2 = ram[cCelda];
                 cCelda++;
                 celda3 = ram[cCelda];
-                Interprete(celda1, celda2, celda3, reg, ram);
+                Interprete(celda1, celda2, celda3, reg, ram,error,muestraD);
                 if(salto == reg[4])
                     reg[4]++;
                 cCelda=(reg[4]-1)*3 + reg[1];
@@ -215,7 +215,7 @@
             }
         }
 
-        void Interprete(long celda1, long celda2, long celda3, long int reg[], long int ram[])
+        void Interprete(long celda1, long celda2, long celda3, long int reg[], long int ram[],int * error, char * muestraD[])
         {
             long int CodOp, TOp1, TOp2, *Op1, *Op2;
             CodOp = (celda1 & 0xFFFF0000)>>16;
@@ -223,7 +223,7 @@
             TOp2 = celda1 & 0x000000FF;
             cargaOp(TOp1, &Op1, celda2, reg, ram);
             cargaOp(TOp2, &Op2, celda3, reg, ram);
-            ejecutaOp(Op1,Op2,CodOp,reg,ram);
+            ejecutaOp(Op1,Op2,CodOp,reg,ram,error,muestraD);
         }
 
 
@@ -278,9 +278,9 @@
                 }
         }
 
-        void ejecutaOp(long int * Op1, long int * Op2, long int CodOp,long int reg[],long int ram[])
+        void ejecutaOp(long int * Op1, long int * Op2, long int CodOp,long int reg[],long int ram[],int * error,char * muestraD[])
         {
-            (*funciones[CodOp])(Op1,Op2,reg,ram);
+            (*funciones[CodOp])(Op1,Op2,reg,ram,error,muestraD);
 
         }
 
