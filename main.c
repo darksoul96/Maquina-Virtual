@@ -261,6 +261,12 @@
                         if(aux == 0x3)
                         {
                             aux=celda & 0x0FFFFFFF;
+                            if(aux & 0x08000000){
+                                aux = ~(aux);
+                                aux = aux + 0x01;
+                                aux = aux & 0x0FFFFFFF;
+                                aux = aux * -1;
+                            }
                             *Op=ram;
                             *Op+=reg[3]+aux;
                         }
@@ -277,6 +283,12 @@
                     else
                         *Op+=reg[5];
                     aux=(celda & 0x0FFFFFF0)>>4;
+                    if(aux & 0x800000){
+                        aux = ~(aux);
+                        aux = aux + 0x01;
+                        aux = aux & 0x00FFFFFF;
+                        aux = aux * -1;
+                    }
                     *Op+=aux;
                     aux=(celda & 0x0000000F);
                     *Op+=reg[aux];
@@ -344,9 +356,13 @@
                 else{
                     if(tipoOp == 0x02){ // operando directo
                         aux = (celda & 0xF0000000) >> 32;
-                        if(celda & 0x08000000)
-                            celda = celda | 0xF0000000L;
-                        aux2 = (celda & 0x0000FFFF);
+                        aux2=celda & 0x0FFFFFFF;
+                        if(aux2 & 0x08000000){
+                            aux2 = ~(aux2);
+                            aux2 = aux2 + 0x01;
+                            aux2 = aux2 & 0x0FFFFFF;
+                            aux2 = aux2 * -1;
+                        }
                         if(aux == 0x00){
                             sprintf(operando,"[%s:%d]",regChar[2],aux2);
                         }
@@ -358,9 +374,13 @@
                         if(tipoOp == 0x03){ // operando indirecto
                             aux = (celda & 0xF0000000) >> 28;
                             aux2 = (celda & 0x0000000F);
-                            if(celda & 0x00800000)
-                                celda = celda | 0xF0000000;
                             aux3 = (celda & 0x0FFFFFF0)>>4;
+                            if(aux3 & 0x800000){
+                                aux3 = ~(aux3);
+                                aux3 = aux3 + 0x01;
+                                aux3 = aux3 & 0x00FFFFFF;
+                                aux3 = aux3 * -1;
+                            }
                             sprintf(operando,"[%s:%s + %d]",regChar[aux],regChar[aux2],aux3);
                         }
                     }
