@@ -20,11 +20,12 @@
 	"util.h"
 	"instrucciones.h"
 
-1589496239 source:c:\users\seba\documents\github\maquina-virtual\main.c
+1589575786 source:c:\users\seba\documents\github\maquina-virtual\main.c
 	<stdio.h>
 	<stdlib.h>
 	"util.h"
 	"instrucciones.h"
+	"string.h"
 
 1585763055 28a65999d9990107388dc48b0692771432597
 	<stdio.h>
@@ -60,13 +61,13 @@
 	<stdlib.h>
 	<time.h>
 
-1589492943 source:c:\users\seba\documents\github\maquina-virtual\instrucciones.c
+1589576978 source:c:\users\seba\documents\github\maquina-virtual\instrucciones.c
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
 	"instrucciones.h"
 
-1589196563 c:\users\seba\documents\github\maquina-virtual\instrucciones.h
+1589575784 c:\users\seba\documents\github\maquina-virtual\instrucciones.h
 
 1589222080 c:\users\usr\documents\github\maquina-virtual\instrucciones.h
 

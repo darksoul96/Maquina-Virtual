@@ -2,33 +2,43 @@
         #include <stdlib.h>
         #include "util.h"
         #include "instrucciones.h"
+        #include "string.h"
 
         void LeerBinario(long int reg[], long int ram[], int argc, char *argv[],int imagenes,int * full);
-        void Ejecucion(long int reg[], long int ram[], int flags[]);
-        void EjecucionImg(long int [], long int [],int flags[],int *error);
-        void cargaDissasembly(long int ram,long int reg[], char * regChar[],char * funcionesChar[],char * muestraD[] , int n);
-        void Interprete(long, long, long, long int [], long int []);
-        void (*funciones[0x8F])(long int *op1, long int *op2, long int reg[], long int ram[]);
+        void Ejecucion(long int reg[], long int ram[], int flags[],char * regChar[], char * funcionesChar[]);
+        void EjecucionImg(long int [], long int [],int flags[],int *error,char * muestraD[]);
+        void cargaDissasembly(long int ram[],long int reg[], char * regChar[],char * funcionesChar[],char * muestraD[] , int n);
+        void Interprete(long, long, long, long int [], long int [],int * error, char * muestraD []);
+        void (*funciones[0x8F])(long int *op1, long int *op2, long int reg[], long int ram[],int * error, char * muestraD);
         void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int ram[]);
-        void ejecutaOp(long int * Op1, long int * Op2, long int CodOp,long int reg[],long int ram[]);
+        void ejecutaOp(long int * Op1, long int * Op2, long int CodOp,long int reg[],long int ram[],int * error, char * muestraD[]);
         void cargarFunciones(void *[]);
         void cuentaProcFlag(int *imagenes, int flags[],int argc, char*argv[]);
+        void cargaFuncionesChar(char *funcionesChar[]);
+        void cargaLinea(long int celda1,long int celda2, long int celda3, char * linea,int pos,int j,char * regChar[], char * funcionesChar[]);
+        void chequeaTipoOP(long int celda, char * operando, long int tipoOp,char * regChar[], char * funcionesChar[]);
+        void CargaRegChar(char *regChar[]);
+
 
         int main(int argc, char *argv[])
         {
             long int reg[16], ram[8192];
             void * funciones[0x8F];
+            char * funcionesChar[0x8F];
+            char * regChar[16];
             int flags[4]={0};
             int imagenes,full;
             cuentaProcFlag(&imagenes,flags,argc,argv);
             cargarFunciones(funciones);
             LeerBinario(reg,ram,argc,argv,imagenes,&full);
+            cargaFuncionesChar(funcionesChar);
+            CargaRegChar(regChar);
             if(full!=1){
                 if(flags[2]==1)
                     system("cls");
-                Ejecucion(reg,ram,flags);
+                Ejecucion(reg,ram,flags,regChar,funcionesChar);
             }
-            return 0;
+            return 1;
         }
 
         void cuentaProcFlag(int *imagenes, int flags[],int argc, char*argv[])
@@ -143,7 +153,7 @@
                 printf("Memoria insuficiente");
         }
 
-        void Ejecucion(long int reg[], long int ram[], int flags[])
+        void Ejecucion(long int reg[], long int ram[], int flags[],char * regChar[], char * funcionesChar[])
         {
             int i,error=0;
 
@@ -153,11 +163,15 @@
             {
                 for(i=0; i<16; i++)
                     reg[i] = ram[ram[1]*16+2 + i];
+                char * muestraD[reg[2]-reg[1]];
                 if(flags[3]==1){
-                    char muestraD[reg[2]-reg[1]];
+                    for(i=0;i<=reg[2]-reg[1];i++){
+                        muestraD[i] = (char*) malloc(50*sizeof(char));
+                        strcpy(muestraD[i],"");
+                    }
                     cargaDissasembly(ram,reg,regChar,funcionesChar,muestraD,reg[2]-reg[1]); // Carga el dissasembler para mostrarlo
                     }
-                EjecucionImg(reg,ram,flags,&error);
+                EjecucionImg(reg,ram,flags,&error,muestraD);
                 for(i=0; i<16; i++)
                     ram[ram[1]*16+2 + i] = reg[i];
                 if(error==0)
@@ -171,15 +185,15 @@
                 for(i=0;i<ram[1];i++){
                     printf("Proceso %d:\n",i+1);
                     printf("PS = %ld | CS = %ld | DS = %ld | ES = %ld \n",ram[16 * i +2],ram[16 * i +2+1],ram[16 * i +2+2],ram[16 * i +2+3]);
-                    printf("IP = %ld | SS = %ld | SP = %ld | BP = %ld \n",ram[16 * i +4],ram[16 * i +2+5],ram[16 * i +2+6],ram[16 * i +2+7]);
-                    printf("AC = %ld | CC = %ld | AX = %ld | BX = %ld \n",ram[16 * i +8],ram[16 * i +2+9],ram[16 * i +2+10],ram[16 * i +2+11]);
-                    printf("CX = %ld | DX = %ld | EX = %ld | FX = %ld \n",ram[16 * i +12],ram[16 * i +2+13],ram[16 * i +2+14],ram[16 * i +2+15]);
+                    printf("IP = %ld | SS = %ld | SP = %ld | BP = %ld \n",ram[16 * i +2+4],ram[16 * i +2+5],ram[16 * i +2+6],ram[16 * i +2+7]);
+                    printf("AC = %ld | CC = %ld | AX = %ld | BX = %ld \n",ram[16 * i +2+8],ram[16 * i +2+9],ram[16 * i +2+10],ram[16 * i +2+11]);
+                    printf("CX = %ld | DX = %ld | EX = %ld | FX = %ld \n",ram[16 * i +2+12],ram[16 * i +2+13],ram[16 * i +2+14],ram[16 * i +2+15]);
                 }
             }
         }
 
 
-        void EjecucionImg(long int reg[], long int ram[],int flags[],int * error)
+        void EjecucionImg(long int reg[], long int ram[],int flags[],int * error,char * muestraD[])
         {
             long celda1,celda2,celda3;
             long int salto;
@@ -193,7 +207,13 @@
                 celda2 = ram[cCelda];
                 cCelda++;
                 celda3 = ram[cCelda];
-                Interprete(celda1, celda2, celda3, reg, ram);
+                Interprete(celda1, celda2, celda3, reg, ram,error,muestraD);
+                    printf("%s",muestraD[salto-1]);
+                    printf("\n");
+                    printf("PS = %ld | CS = %ld | DS = %ld | ES = %ld \n",reg[0],reg[1],reg[2],reg[3]);
+                    printf("IP = %ld | SS = %ld | SP = %ld | BP = %ld \n",reg[4],reg[5],reg[6],reg[7]);
+                    printf("AC = %ld | CC = %ld | AX = %ld | BX = %ld \n",reg[8],reg[9],reg[10],reg[11]);
+                    printf("CX = %ld | DX = %ld | EX = %ld | FX = %ld \n",reg[12],reg[13],reg[14],reg[15]);
                 if(salto == reg[4])
                     reg[4]++;
                 cCelda=(reg[4]-1)*3 + reg[1];
@@ -201,7 +221,8 @@
             }
         }
 
-        void Interprete(long celda1, long celda2, long celda3, long int reg[], long int ram[])
+
+        void Interprete(long celda1, long celda2, long celda3, long int reg[], long int ram[],int * error, char * muestraD[])
         {
             long int CodOp, TOp1, TOp2, *Op1, *Op2;
             CodOp = (celda1 & 0xFFFF0000)>>16;
@@ -209,9 +230,8 @@
             TOp2 = celda1 & 0x000000FF;
             cargaOp(TOp1, &Op1, celda2, reg, ram);
             cargaOp(TOp2, &Op2, celda3, reg, ram);
-            ejecutaOp(Op1,Op2,CodOp,reg,ram);
+            ejecutaOp(Op1,Op2,CodOp,reg,ram,error,muestraD);
         }
-
 
         void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int ram[])
         {
@@ -241,6 +261,12 @@
                         if(aux == 0x3)
                         {
                             aux=celda & 0x0FFFFFFF;
+                            if(aux & 0x08000000){
+                                aux = ~(aux);
+                                aux = aux + 0x01;
+                                aux = aux & 0x0FFFFFFF;
+                                aux = aux * -1;
+                            }
                             *Op=ram;
                             *Op+=reg[3]+aux;
                         }
@@ -248,82 +274,186 @@
                     }
                 }
                 else{
-                    int acceso=0;
+                    *Op=ram;
                     aux=(celda & 0xF0000000)>>28;
                     if (aux == 0x02)
-                        acceso+=reg[2];
+                        *Op+=reg[2];
                     else if (aux == 0x03)
-                        acceso+=reg[3];
+                        *Op+=reg[3];
                     else
-                        acceso+=reg[5];
+                        *Op+=reg[5];
                     aux=(celda & 0x0FFFFFF0)>>4;
-                    acceso+=aux;
+                    if(aux & 0x800000){
+                        aux = ~(aux);
+                        aux = aux + 0x01;
+                        aux = aux & 0x00FFFFFF;
+                        aux = aux * -1;
+                    }
+                    *Op+=aux;
                     aux=(celda & 0x0000000F);
-                    acceso+=reg[aux];
-                    *Op=acceso;
+                    *Op+=reg[aux];
                 }
         }
 
-        void ejecutaOp(long int * Op1, long int * Op2, long int CodOp,long int reg[],long int ram[])
+        void ejecutaOp(long int * Op1, long int * Op2, long int CodOp,long int reg[],long int ram[],int * error,char * muestraD[])
         {
-            (*funciones[CodOp])(Op1,Op2,reg,ram);
+            (*funciones[CodOp])(Op1,Op2,reg,ram,error,muestraD);
+
         }
+
+        void cargaDissasembly(long int ram[],long int reg[], char * regChar[],char * funcionesChar[],char * muestraD[] , int n){
+            int i=0,j=0,pos;
+            long celda1,celda2,celda3,mascara;
+            char * linea;
+            linea = (char*) malloc(100 *sizeof(char));
+            while(i<n){
+                pos = reg[1]+i;
+                celda1 = ram[reg[1]+i];
+                i++;
+                celda2=ram[reg[1]+i];
+                i++;
+                celda3=ram[reg[1]+i];
+                cargaLinea(celda1,celda2,celda3,linea,pos,j+1,regChar,funcionesChar);
+                strcpy(muestraD[j],linea);
+                j++;
+                i++;
+                }
+                for(i=0;i<j;i++){
+                    printf("%s \n", muestraD[i]);
+                }
+            }
+
+        void cargaLinea(long int celda1,long int celda2, long int celda3, char * linea,int pos,int j,char * regChar[], char * funcionesChar[]){
+            long int mnemonico,tipoOp1,tipoOp2;
+            char * operando1;
+            char * operando2;
+            operando1= (char*) malloc(50*sizeof(char));
+            operando2= (char*) malloc(50*sizeof(char));
+            mnemonico = (celda1 & 0xFFFF0000) >> 16;
+            tipoOp1 = (celda1 & 0x0000FF00) >> 8;
+            chequeaTipoOP(celda2,operando1,tipoOp1,regChar,funcionesChar);
+            if (mnemonico == 0x81 || mnemonico == 0x44 || mnemonico == 0x44 || mnemonico == 0x8F || mnemonico == 0x40 || mnemonico == 0x25|| mnemonico == 0x27){
+                sprintf(linea,"[%04d]: %08X %08X %08X    %d: %s \t %s ",pos,celda1,celda2,celda3,j,funcionesChar[mnemonico],operando1);
+            }
+            else{
+                tipoOp2 = (celda1 & 0x000000FF);
+                chequeaTipoOP(celda3,operando2,tipoOp2,regChar,funcionesChar);
+                sprintf(linea,"[%04d]: %08X %08X %08X    %d: %s \t %s,%s",pos,celda1,celda2,celda3,j,funcionesChar[mnemonico],operando1,operando2);
+            }
+        }
+
+        void chequeaTipoOP(long int celda, char * operando, long int tipoOp,char * regChar[], char * funcionesChar[]){
+            long aux,aux2,aux3;
+
+            if(tipoOp == 0x00){ // operando inmediato
+                sprintf(operando,"%d",celda);
+            }
+            else{
+                if(tipoOp == 0x01){ // operando de registro
+                    aux = celda & 0x000000FF;
+                    strcpy(operando,regChar[aux]);
+                }
+                else{
+                    if(tipoOp == 0x02){ // operando directo
+                        aux = (celda & 0xF0000000) >> 32;
+                        aux2=celda & 0x0FFFFFFF;
+                        if(aux2 & 0x08000000){
+                            aux2 = ~(aux2);
+                            aux2 = aux2 + 0x01;
+                            aux2 = aux2 & 0x0FFFFFF;
+                            aux2 = aux2 * -1;
+                        }
+                        if(aux == 0x00){
+                            sprintf(operando,"[%s:%d]",regChar[2],aux2);
+                        }
+                        else{
+                            sprintf(operando,"[%s:%d]",regChar[aux],aux2);
+                        }
+                    }
+                    else{
+                        if(tipoOp == 0x03){ // operando indirecto
+                            aux = (celda & 0xF0000000) >> 28;
+                            aux2 = (celda & 0x0000000F);
+                            aux3 = (celda & 0x0FFFFFF0)>>4;
+                            if(aux3 & 0x800000){
+                                aux3 = ~(aux3);
+                                aux3 = aux3 + 0x01;
+                                aux3 = aux3 & 0x00FFFFFF;
+                                aux3 = aux3 * -1;
+                            }
+                            sprintf(operando,"[%s:%s + %d]",regChar[aux],regChar[aux2],aux3);
+                        }
+                    }
+                }
+            }
+        }
+
 
         void CargaRegChar(char *regChar[])
         {
-            regChar[0]="PS";
-            regChar[1]="CS";
-            regChar[2]="DS";
-            regChar[3]="ES";
-            regChar[4]="IP";
-            regChar[5]="SS";
-            regChar[6]="SP";
-            regChar[7]="BP";
-            regChar[8]="AC";
-            regChar[9]="CC";
-            regChar[10]="AX";
-            regChar[11]="BX";
-            regChar[12]="CX";
-            regChar[13]="DX";
-            regChar[14]="EX";
-            regChar[15]="FX";
+            int i;
+            for(i=0;i<=16;i++){
+                regChar[i] = (char*) malloc(5*sizeof(char));
+                strcpy(regChar[i],"");
+            }
+            strcpy(regChar[0],"PS");
+            strcpy(regChar[1],"CS");
+            strcpy(regChar[2],"DS");
+            strcpy(regChar[3],"ES");
+            strcpy(regChar[4],"IP");
+            strcpy(regChar[5],"SS");
+            strcpy(regChar[6],"SP");
+            strcpy(regChar[7],"BP");
+            strcpy(regChar[8],"AC");
+            strcpy(regChar[9],"CC");
+            strcpy(regChar[10],"AX");
+            strcpy(regChar[11],"BX");
+            strcpy(regChar[12],"CX");
+            strcpy(regChar[13],"DX");
+            strcpy(regChar[14],"EX");
+            strcpy(regChar[15],"FX");
         }
 
-        void cargaFuncionesChar(char *funcionesChar[])
-        {
-            funcionesChar[0x01]="mov";
-            funcionesChar[0x02]="add";
-            funcionesChar[0x03]="sub";
-            funcionesChar[0x04]="mul";
-            funcionesChar[0x05]="divi";
-            funcionesChar[0x06]="mod";
-            funcionesChar[0x13]="cmp";
-            funcionesChar[0x17]="swap";
-            funcionesChar[0x19]="rnd";
-            funcionesChar[0x31]="and";
-            funcionesChar[0x32]="or";
-            funcionesChar[0x33]="not";
-            funcionesChar[0x34]="xor";
-            funcionesChar[0x37]="shl";
-            funcionesChar[0x38]="shr";
-            funcionesChar[0x20]="jmp";
-            funcionesChar[0x21]="je";
-            funcionesChar[0x22]="jg";
-            funcionesChar[0x23]="jl";
-            funcionesChar[0x24]="jz";
-            funcionesChar[0x25]="jp";
-            funcionesChar[0x26]="jn";
-            funcionesChar[0x27]="jnz";
-            funcionesChar[0x28]="jnp";
-            funcionesChar[0x29]="jnn";
-            funcionesChar[0x40]="call";
-            funcionesChar[0x44]="push";
-            funcionesChar[0x45]="pop";
-            funcionesChar[0x48]="ret";
-            funcionesChar[0x50]="slen";
-            funcionesChar[0x51]="smov";
-            funcionesChar[0x53]="scmp";
-            funcionesChar[0x81]="sys";
-            funcionesChar[0x8F]="stop";
+        void cargaFuncionesChar(char *funcionesChar[]){
+            int i;
+            for (i=0; i<=0x8F; i++)
+            {
+                funcionesChar[i] = (char*) malloc(5*sizeof(char));
+                strcpy(funcionesChar[i],"");
+            }
+            strcpy(funcionesChar[0x01],"MOV");
+            strcpy(funcionesChar[0x02],"ADD");
+            strcpy(funcionesChar[0x03],"SUB");
+            strcpy(funcionesChar[0x04],"MUL");
+            strcpy(funcionesChar[0x05],"DIVI");
+            strcpy(funcionesChar[0x06],"MOD");
+            strcpy(funcionesChar[0x13],"CMP");
+            strcpy(funcionesChar[0x17],"SWAP");
+            strcpy(funcionesChar[0x19],"RND");
+            strcpy(funcionesChar[0x31],"AND");
+            strcpy(funcionesChar[0x32],"OR");
+            strcpy(funcionesChar[0x33],"NOT");
+            strcpy(funcionesChar[0x34],"XOR");
+            strcpy(funcionesChar[0x37],"SHL");
+            strcpy(funcionesChar[0x38],"SHR");
+            strcpy(funcionesChar[0x20],"JMP");
+            strcpy(funcionesChar[0x21],"JE");
+            strcpy(funcionesChar[0x22],"JG");
+            strcpy(funcionesChar[0x23],"JL");
+            strcpy(funcionesChar[0x24],"JZ");
+            strcpy(funcionesChar[0x25],"JP");
+            strcpy(funcionesChar[0x26],"JN");
+            strcpy(funcionesChar[0x27],"JNZ");
+            strcpy(funcionesChar[0x28],"JNP");
+            strcpy(funcionesChar[0x29],"JNN");
+            strcpy(funcionesChar[0x40],"CALL");
+            strcpy(funcionesChar[0x44],"PUSH");
+            strcpy(funcionesChar[0x45],"POP");
+            strcpy(funcionesChar[0x48],"RET");
+            strcpy(funcionesChar[0x50],"SLEN");
+            strcpy(funcionesChar[0x51],"SMOV");
+            strcpy(funcionesChar[0x53],"SCMP");
+            strcpy(funcionesChar[0x81],"SYS");
+            strcpy(funcionesChar[0x8F],"STOP");
 
         }
