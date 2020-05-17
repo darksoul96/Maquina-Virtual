@@ -310,7 +310,10 @@ void sys(long int *op1, long int *op2, long int reg[], long int ram[], int flags
 {
     long mascara=0x01, aux;
     int bits[16], i, v1, v2;
-    char auxc, *respuesta, *valor1, *valor2;
+    char auxc;
+    char *respuesta[10];
+    char *valor1;
+    char *valor2;
 
     for (i=0; i<16; i++)
     {
@@ -569,12 +572,19 @@ void sys(long int *op1, long int *op2, long int reg[], long int ram[], int flags
     {
         if(flags[1]==1)
         {
-            printf("[%d] cmd:",reg[4]);
+            printf("[%03d] cmd:",reg[4]);
             char delim[]=" ";
             char caracter;
+            for(i=0;i<10;i++){
+                respuesta[i] = (char*)malloc(5*sizeof(char));
+                strcpy(respuesta[i],"");
+            }
+            fflush(stdin);
             fgets(respuesta,10,stdin);
             if ((respuesta[0] != '\n'))
             {
+                valor1 = (char*)malloc(5*sizeof(char));
+                valor2 = (char*)malloc(5*sizeof(char));
                 *valor1=strtok(respuesta,delim);
                 *valor2=strtok(respuesta,delim);
                 v1=atoi(valor1);

@@ -8,10 +8,10 @@
         void Ejecucion(long int reg[], long int ram[], int flags[],char * regChar[], char * funcionesChar[]);
         void EjecucionImg(long int [], long int [],int flags[],int *error,char * muestraD[]);
         void cargaDissasembly(long int ram[],long int reg[], char * regChar[],char * funcionesChar[],char * muestraD[] , int n);
-        void Interprete(long, long, long, long int [], long int [],int * error, char * muestraD []);
-        void (*funciones[0x8F])(long int *op1, long int *op2, long int reg[], long int ram[],int * error, char * muestraD);
+        void Interprete(long, long, long, long int [], long int [],int flags[],int * error, char * muestraD []);
+        void (*funciones[0x8F])(long int *op1, long int *op2, long int reg[], long int ram[],int flags[],int * error, char * muestraD);
         void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int ram[]);
-        void ejecutaOp(long int * Op1, long int * Op2, long int CodOp,long int reg[],long int ram[],int * error, char * muestraD[]);
+        void ejecutaOp(long int * Op1, long int * Op2, long int CodOp,long int reg[],long int ram[],int flags[],int * error, char * muestraD[]);
         void cargarFunciones(void *[]);
         void cuentaProcFlag(int *imagenes, int flags[],int argc, char*argv[]);
         void cargaFuncionesChar(char *funcionesChar[]);
@@ -207,7 +207,7 @@
                 celda2 = ram[cCelda];
                 cCelda++;
                 celda3 = ram[cCelda];
-                Interprete(celda1, celda2, celda3, reg, ram,error,muestraD);
+                Interprete(celda1, celda2, celda3, reg, ram,flags,error,muestraD);
                     printf("%s",muestraD[salto-1]);
                     printf("\n");
                     printf("PS = %ld | CS = %ld | DS = %ld | ES = %ld \n",reg[0],reg[1],reg[2],reg[3]);
@@ -221,8 +221,7 @@
             }
         }
 
-
-        void Interprete(long celda1, long celda2, long celda3, long int reg[], long int ram[],int * error, char * muestraD[])
+        void Interprete(long celda1, long celda2, long celda3, long int reg[], long int ram[],int flags[], int * error, char * muestraD[])
         {
             long int CodOp, TOp1, TOp2, *Op1, *Op2;
             CodOp = (celda1 & 0xFFFF0000)>>16;
@@ -230,7 +229,7 @@
             TOp2 = celda1 & 0x000000FF;
             cargaOp(TOp1, &Op1, celda2, reg, ram);
             cargaOp(TOp2, &Op2, celda3, reg, ram);
-            ejecutaOp(Op1,Op2,CodOp,reg,ram,error,muestraD);
+            ejecutaOp(Op1,Op2,CodOp,reg,ram,flags,error,muestraD);
         }
 
         void cargaOp(long int TOp, long int **Op, long celda, long int reg[], long int ram[])
@@ -262,10 +261,7 @@
                         {
                             aux=celda & 0x0FFFFFFF;
                             if(aux & 0x08000000){
-                                aux = ~(aux);
-                                aux = aux + 0x01;
-                                aux = aux & 0x0FFFFFFF;
-                                aux = aux * -1;
+                                aux = aux | 0xF0000000;
                             }
                             *Op=ram;
                             *Op+=reg[3]+aux;
@@ -284,10 +280,7 @@
                         *Op+=reg[5];
                     aux=(celda & 0x0FFFFFF0)>>4;
                     if(aux & 0x800000){
-                        aux = ~(aux);
-                        aux = aux + 0x01;
-                        aux = aux & 0x00FFFFFF;
-                        aux = aux * -1;
+                        aux = aux | 0xFF000000;
                     }
                     *Op+=aux;
                     aux=(celda & 0x0000000F);
@@ -295,9 +288,9 @@
                 }
         }
 
-        void ejecutaOp(long int * Op1, long int * Op2, long int CodOp,long int reg[],long int ram[],int * error,char * muestraD[])
+        void ejecutaOp(long int * Op1, long int * Op2, long int CodOp,long int reg[],long int ram[],int flags[], int * error,char * muestraD[])
         {
-            (*funciones[CodOp])(Op1,Op2,reg,ram,error,muestraD);
+            (*funciones[CodOp])(Op1,Op2,reg,ram,flags,error,muestraD);
 
         }
 
@@ -355,13 +348,10 @@
                 }
                 else{
                     if(tipoOp == 0x02){ // operando directo
-                        aux = (celda & 0xF0000000) >> 32;
+                        aux = (celda & 0xF0000000) >> 28;
                         aux2=celda & 0x0FFFFFFF;
                         if(aux2 & 0x08000000){
-                            aux2 = ~(aux2);
-                            aux2 = aux2 + 0x01;
-                            aux2 = aux2 & 0x0FFFFFF;
-                            aux2 = aux2 * -1;
+                            aux2 = aux2 | 0xF0000000;
                         }
                         if(aux == 0x00){
                             sprintf(operando,"[%s:%d]",regChar[2],aux2);
@@ -376,10 +366,7 @@
                             aux2 = (celda & 0x0000000F);
                             aux3 = (celda & 0x0FFFFFF0)>>4;
                             if(aux3 & 0x800000){
-                                aux3 = ~(aux3);
-                                aux3 = aux3 + 0x01;
-                                aux3 = aux3 & 0x00FFFFFF;
-                                aux3 = aux3 * -1;
+                                aux3 = aux3 | 0xFF000000;
                             }
                             sprintf(operando,"[%s:%s + %d]",regChar[aux],regChar[aux2],aux3);
                         }
